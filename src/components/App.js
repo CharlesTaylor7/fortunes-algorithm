@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { useFrames } from '../hooks/useFrames';
 
-function App() {
+export const App = () => {
+  const { frame, forward, backward, append } = useFrames();
+
+  useEffect(() => {
+    console.log(frame);
+  }, [frame]);
+
+  useEffect(() => {
+    document.onkeydown = (e) => {
+      if (e.key === 'ArrowLeft') backward();
+      else if (e.key === 'ArrowRight') forward();
+      else append(e.key);
+    }
+  }, [forward, backward, append]);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -22,5 +37,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
