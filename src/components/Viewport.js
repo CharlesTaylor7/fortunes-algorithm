@@ -19,27 +19,36 @@ export const Viewport = () => {
     },
     [setNodes]
   )
+  let nodeItems = [];
   if (ref.current) {
-    console.log(ref.current)
+    const { width, height } = ref.current.getBoundingClientRect()
+    console.log(width)
+    console.log(height)
+    nodeItems = nodes.map((node, i) =>
+      <circle
+        key={i}
+        r="4"
+        cx={node.x}
+        cy={node.y}
+      />)
   }
   return (
-    <svg
+    <div
       ref={ref}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 1000 1000"
       className="viewport"
       onClick={onClick}
     >
-      {ref.current
-        ? nodes.map((node, i) =>
-          <circle
-            key={i}
-            r="10"
-            cx={node.x * ref.current.style.width / 1000}
-            cy={node.y * ref.current.style.height / 1000}
-          />)
-        : null
-      }
-    </svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="100%"
+        height="100%"
+        // viewBox="113 128 972 600"
+        // preserveAspectRatio="xMidYMid meet"
+        // viewBox="0 0 1000 1000"
+        // preserveAspectRatio="none"
+      >
+        {nodeItems}
+      </svg>
+    </div>
   )
 }
