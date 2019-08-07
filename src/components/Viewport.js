@@ -5,11 +5,19 @@ export const Viewport = () => {
   const [ nodes, setNodes ] = useState([])
   const ref = useRef(null)
 
+  const getViewportDimensions = () => {
+    if (!ref.current) return undefined
+    return ref.current.getBoundingClientRect()
+  }
+
   const onClick = useCallback(
     e => {
-      const { nativeEvent: { offsetX: x, offsetY: y } } = e;
-      const point = { x, y}
-      console.log(point);
+      const { nativeEvent: { offsetX, offsetY } } = e;
+      const { width, height } = getViewportDimensions();
+      const point = {
+        x: Math.min(offsetX / width, 1),
+        y: Math.min(offsetY / height, 1),
+      };
       setNodes(
         nodes => [
           ...nodes,
@@ -19,36 +27,25 @@ export const Viewport = () => {
     },
     [setNodes]
   )
-  let nodeItems = [];
-  if (ref.current) {
-    const { width, height } = ref.current.getBoundingClientRect()
-    console.log(width)
-    console.log(height)
-    nodeItems = nodes.map((node, i) =>
-      <circle
-        key={i}
-        r="4"
-        cx={node.x}
-        cy={node.y}
-      />)
-  }
+
+  const box = getViewportDimensions();
   return (
-    <div
+    <svg
       ref={ref}
+      xmlns="http://www.w3.org/2000/svg"
+      width="100%"
+      height="100%"
       className="viewport"
       onClick={onClick}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="100%"
-        height="100%"
-        // viewBox="113 128 972 600"
-        // preserveAspectRatio="xMidYMid meet"
-        // viewBox="0 0 1000 1000"
-        // preserveAspectRatio="none"
-      >
-        {nodeItems}
-      </svg>
-    </div>
+      {nodes.map((node, i) =>
+        <circle
+          key={i}
+          r="4"
+          cx={node.x * box.width}
+          cy={node.y * box.height}
+        />)
+      }
+    </svg>
   )
 }
