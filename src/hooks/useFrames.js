@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react'
 export const useFrames = (initialFrames) => {
 
   const [frameIndex, setFrameIndex] = useState(0);
-  const [frames, setFrames] = useState(initialFrames || ["Catto", "Doggo"]);
+  const [frames, setFrames] = useState(initialFrames || []);
 
   const forward = useCallback(() =>
     setFrameIndex(i => Math.min(i+1, frames.length-1))
