@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
-import { getX } from '../parabola'
+import { getX, parabolaPath } from '../parabola'
 
 const range = function* (n) {
   for (let i = 0; i < n; i++) {
@@ -60,20 +60,13 @@ export const Viewport = () => {
             y={y}
           />
         ))}
-        {sizedNodes.flatMap((focus) => {
-          const f = getX({focus, directrix: 0})
-          return Array.from(range(11)).map(i => ({
-            x: f(size.height * i / 10),
-            y: (size.height * i / 10)
+        {sizedNodes.map((focus) =>
+          parabolaPath({
+            focus,
+            directrix: 0,
+            y_range: [0, size.height]
           })
-        )}).map(({x, y}, i) => (
-          <Node
-            key={`p${i}`}
-            x={x}
-            y={y}
-          />
-        ))
-        }
+        )}
       </svg>
     </div>
   )
