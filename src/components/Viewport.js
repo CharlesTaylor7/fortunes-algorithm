@@ -1,6 +1,20 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
+import { getX } from '../parabola'
+
+const range = function* (n) {
+  for (let i = 0; i < n; i++) {
+    yield i;
+  }
+}
+const Node = ({x, y}) => (
+  <circle
+    r="4"
+    cx={x}
+    cy={y}
+  />
+);
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
@@ -23,6 +37,11 @@ export const Viewport = () => {
     },
     [setNodes, size]
   )
+  const sizedNodes = nodes.map(({x, y}) => ({
+    x: size.width * x,
+    y: size.height * y,
+  }))
+
   return (
     <div
       className="viewport"
@@ -34,13 +53,26 @@ export const Viewport = () => {
         height="100%"
         onClick={onClick}
       >
-        {nodes.map((node, i) =>
-          <circle
+        {sizedNodes.map(({x, y}, i) => (
+          <Node
             key={i}
-            r="4"
-            cx={node.x * size.width}
-            cy={node.y * size.height}
-          />)
+            x={x}
+            y={y}
+          />
+        ))}
+        {sizedNodes.flatMap((focus) => {
+          const f = getX({focus, directrix: 0})
+          return Array.from(range(11)).map(i => ({
+            x: f(size.height * i / 10),
+            y: (size.height * i / 10)
+          })
+        )}).map(({x, y}, i) => (
+          <Node
+            key={`p${i}`}
+            x={x}
+            y={y}
+          />
+        ))
         }
       </svg>
     </div>

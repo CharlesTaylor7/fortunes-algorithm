@@ -6,14 +6,9 @@ export const App = () => {
   const { frame, forward, backward, append } = useFrames();
 
   useEffect(() => {
-    console.log(frame)
-  }, [frame])
-
-  useEffect(() => {
     document.onkeydown = (e) => {
       if (e.key === 'ArrowLeft') backward()
       else if (e.key === 'ArrowRight') forward()
-      else append(e.key)
     }
   }, [forward, backward, append])
 
