@@ -1,4 +1,5 @@
 .viewport {
+  position: relative;
   height: 60vh;
   width: 60vw;
   background-color: white;
