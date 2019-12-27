@@ -1,5 +1,15 @@
 import React from 'react'
 
+const Point = ({ color, x, y }) => (
+  <circle
+    stroke={color}
+    fill={color}
+    r="4"
+    cx={x}
+    cy={y}
+  />
+)
+
 export const Parabola = ({ start, control, end, focus, directrix }) => (
   <>
     <path
@@ -20,21 +30,15 @@ export const Parabola = ({ start, control, end, focus, directrix }) => (
       fill="none"
       d={`M ${start.x} ${start.y} L ${control.x} ${control.y} L ${end.x} ${end.y}`}
     />
-    <circle
-      r="4"
-      cx={control.x}
-      cy={control.y}
-      stroke="blue"
-      strokeWidth="2"
-      fill="blue"
+    <Point
+      color="blue"
+      x={control.x}
+      y={control.y}
     />
-    <circle
-      r="4"
-      cx={focus.x}
-      cy={focus.y}
-      stroke="black"
-      strokeWidth="2"
-      fill="black"
+    <Point
+      color="black"
+      x={focus.x}
+      y={focus.y}
     />
   </>
 )
