@@ -31,10 +31,5 @@ export const Parabola = ({ start, control, end, focus, directrix }) => (
       x={focus.x}
       y={focus.y}
     />
-    <Point
-      color="black"
-      x={focus.x}
-      y={focus.y}
-    />
   </>
 )

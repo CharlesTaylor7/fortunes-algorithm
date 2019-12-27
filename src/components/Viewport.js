@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
 import { Parabola } from './svg/Parabola'

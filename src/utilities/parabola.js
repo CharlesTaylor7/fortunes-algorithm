@@ -25,12 +25,11 @@ export const parabolaBezier = ({ focus, directrix, y_range }) => {
   const x_i = f(y_i);
   const x_f = f(y_f);
   const { x: f_x, y: f_y } = focus;
-  const dy = f_y - y_i;
-  const x_slope = dy / (d - f_x);
+  const dy = y_i - f_y;
+  const x_slope = dy / (d - x_i);
   const dx = x_slope * dy;
   const c_x = x_i + dx;
   const c_y = f_y;
-
   const start = { x: x_i, y: y_i }
   const end = { x: x_f, y: y_f }
   const control = { x: c_x, y: c_y }
