@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
-import Parabola from './Parabola'
+import { Parabola } from './Parabola'
 import useNodes from '../hooks/useNodes'
 import { parabolaBezier } from '../utilities/parabola'
 
@@ -38,6 +38,8 @@ export const Viewport = () => {
         {nodes.map((focus, i) =>
           <Parabola
             key={i}
+            focus={focus}
+            directrix={0}
             {...parabolaBezier({
               focus,
               directrix: 0,
