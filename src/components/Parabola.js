@@ -36,6 +36,16 @@ export const Parabola = ({ start, control, end, focus, directrix }) => (
       y={control.y}
     />
     <Point
+      color="green"
+      x={(directrix + focus.x) / 2}
+      y={focus.y}
+    />
+    <Point
+      color="black"
+      x={focus.x}
+      y={focus.y}
+    />
+    <Point
       color="black"
       x={focus.x}
       y={focus.y}
