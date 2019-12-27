@@ -18,8 +18,6 @@ export const getX = ({ focus, directrix }) => {
   return y => ((y - f_y)**2 + offset) / (2 * denominator);
 }
 
-// x' = (y - f_y) / (f_x - d)
-
 export const parabolaPath = ({ focus, directrix, y_range }) => {
   const f = getX({ focus, directrix });
   const d = directrix;

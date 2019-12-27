@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import './App.css'
 import { useFrames } from '../hooks/useFrames'
 import { Viewport } from './Viewport'
+
 export const App = () => {
   const { frame, forward, backward, append } = useFrames();
 

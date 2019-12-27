@@ -2,6 +2,8 @@ import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
 import { Parabola } from './Parabola'
+import scale from '../utilities/scale'
+import useNodes from '../hooks/useNodes'
 
 const Node = ({x, y}) => (
   <circle
@@ -13,29 +15,7 @@ const Node = ({x, y}) => (
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
-  const [ nodes, setNodes ] = useState([])
-
-  const onClick = useCallback(
-    e => {
-      const { nativeEvent: { offsetX, offsetY } } = e;
-      const { width, height } = size;
-      const point = {
-        x: Math.min(offsetX / width, 1),
-        y: Math.min(offsetY / height, 1),
-      };
-      setNodes(
-        nodes => [
-          ...nodes,
-          point
-        ]
-      )
-    },
-    [setNodes, size]
-  )
-  const sizedNodes = nodes.map(({x, y}) => ({
-    x: size.width * x,
-    y: size.height * y,
-  }))
+  const { onClick, nodes } = useNodes(size);
 
   return (
     <div
@@ -48,14 +28,14 @@ export const Viewport = () => {
         height="100%"
         onClick={onClick}
       >
-        {sizedNodes.map(({x, y}, i) => (
+        {nodes.map(({x, y}, i) => (
           <Node
             key={i}
             x={x}
             y={y}
           />
         ))}
-        {sizedNodes.map((focus, i) =>
+        {nodes.map((focus, i) =>
           <Parabola
             key={i}
             focus={focus}
