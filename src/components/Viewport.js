@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
-import { getX, parabolaPath } from '../utilities/parabola'
+import { Parabola } from './Parabola'
 
 const Node = ({x, y}) => (
   <circle
@@ -56,13 +56,10 @@ export const Viewport = () => {
           />
         ))}
         {sizedNodes.map((focus, i) =>
-          <path
+          <Parabola
             key={i}
-            d={parabolaPath({
-              focus,
-              directrix: 0,
-              y_range: [0, size.height]
-            })}
+            focus={focus}
+            viewportHeight={size.height}
           />
         )}
       </svg>
