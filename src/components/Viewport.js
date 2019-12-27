@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
-import { Parabola } from './Parabola'
-import scale from '../utilities/scale'
+import Parabola from './Parabola'
 import useNodes from '../hooks/useNodes'
+import { parabolaBezier } from '../utilities/parabola'
 
 const Node = ({x, y}) => (
   <circle
@@ -38,8 +38,11 @@ export const Viewport = () => {
         {nodes.map((focus, i) =>
           <Parabola
             key={i}
-            focus={focus}
-            viewportHeight={size.height}
+            {...parabolaBezier({
+              focus,
+              directrix: 0,
+              y_range: [0, size.height]
+            })}
           />
         )}
       </svg>

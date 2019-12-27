@@ -8,7 +8,7 @@
 // x = ((y - f_y)**2 + f_x**2 - d**2) / (2 * (f_x - d))
 // x' = 2 * (y - f_y) / (2 * (f_x - d))
 // x' = (y - f_y) / (f_x - d)
-export const getX = ({ focus, directrix }) => {
+const getX = ({ focus, directrix }) => {
   const { x: f_x, y: f_y } = focus;
   const d = directrix;
 
@@ -18,7 +18,7 @@ export const getX = ({ focus, directrix }) => {
   return y => ((y - f_y)**2 + offset) / (2 * denominator);
 }
 
-export const parabolaPath = ({ focus, directrix, y_range }) => {
+export const parabolaBezier = ({ focus, directrix, y_range }) => {
   const f = getX({ focus, directrix });
   const d = directrix;
   const [y_i, y_f] = y_range;
@@ -31,7 +31,9 @@ export const parabolaPath = ({ focus, directrix, y_range }) => {
   const c_x = x_i + dx;
   const c_y = f_y;
 
-  const path = `M ${x_i} ${y_i} Q ${c_x} ${c_y} ${x_f} ${y_f}`
+  const start = { x: x_i, y: y_i }
+  const end = { x: x_f, y: y_f }
+  const control = { x: c_x, y: c_y }
 
-  return path;
+  return { start, end, control }
 }

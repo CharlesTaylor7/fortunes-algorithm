@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import scale from '../utilities/scale'
 
 export default (size) => {
   const [ normalizedNodes, setNodes ] = useState([]);
