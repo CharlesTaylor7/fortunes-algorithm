@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
-import { Parabola } from './Parabola'
+import { Parabola } from './svg/Parabola'
 import useNodes from '../hooks/useNodes'
 import { parabolaBezier } from '../utilities/parabola'
 
