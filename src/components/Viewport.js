@@ -26,9 +26,9 @@ export const Viewport = () => {
             focus={focus}
             directrix={0}
             {...parabolaBezier({
-              focus,
               directrix: 0,
-              y_range: [0, size.height]
+              focus,
+              size,
             })}
           />
         )}

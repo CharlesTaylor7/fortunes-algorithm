@@ -15,33 +15,38 @@ export const parabola = ({ focus, directrix }) => {
   const denominator = 2 * (f_x - d);
 
   const x = y => ((y - f_y)**2 + offset) / (denominator);
-  return x;
+  const x_prime = y => (y - f_y) / (f_x - d);
+  return [x, x_prime];
 }
 
-export const parabolaBezier = ({ focus, directrix, y_range }) => {
-  const f = parabola({ focus, directrix });
+export const parabolaBezier = ({ focus, directrix, size }) => {
+  const [x, x_prime] = parabola({ focus, directrix });
 
-  const [y_i, y_f] = y_range;
+  const y_i = 0;
+  const y_f = size.height;
 
-  if (focus.y - y_i < y_f - focus.y) {
-    const dy = y_f - focus.y;
-    const y_i = focus.y - dy;
-    const start = { x: f(y_i), y: y_i }
-    const end = { x: f(y_f), y: y_f }
-    const vx = (focus.x + directrix) / 2;
-    const c_x = 2 * vx - start.x;
-    const c_y = focus.y;
-    const control = { x: c_x, y: c_y };
-    return { start, end, control };
-  } else {
-    const dy = focus.y - y_i;
-    const y_f = focus.y + dy;
-    const start = { x: f(y_i), y: y_i }
-    const end = { x: f(y_f), y: y_f }
-    const vx = (focus.x + directrix) / 2;
-    const c_x = 2 * vx - start.x;
-    const c_y = focus.y;
-    const control = { x: c_x, y: c_y };
-    return { start, end, control };
+  const x_i = x(y_i);
+  const x_f = x(y_f);
+  const start = { x: x_i, y: y_i }
+  const end = { x: x_f, y: y_f }
+
+  const m1 = x_prime(y_i);
+  const m2 = x_prime(y_f);
+
+  const e = x_i - m1 * y_i;
+  const f = x_f - m2 * y_f;
+
+  const det = m1 - m2;
+  const c_x = (-m2 * e + m1 * f) / det;
+  const c_y = (-1 * e + f) / det;
+
+  if (!Number.isFinite(c_x) || !Number.isFinite(c_y)) {
+    const start = { x: 0, y: focus.y };
+    const end = { x: size.width, y: focus.y };
+    return { start, end, control: start };
   }
+
+  const control = { x: c_x, y: c_y };
+
+  return { start, end, control };
 }
