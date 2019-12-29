@@ -1,4 +1,4 @@
-const bisector = (
+export const bisector = (
   { x: x1, y: y1 },
   { x: x2, y: y2 },
 ) => ({
