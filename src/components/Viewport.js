@@ -3,6 +3,7 @@ import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
 import { Circle } from './svg/Circle'
 import { Parabola } from './svg/Parabola'
+import { Site } from './svg/Site'
 import useNodes from '../hooks/useNodes'
 import circumCircle from '../utilities/circumCircle'
 import { parabolaBezier } from '../utilities/parabola'
@@ -10,11 +11,6 @@ import { parabolaBezier } from '../utilities/parabola'
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
   const { onClick, nodes } = useNodes(size);
-
-  let circle;
-  if (nodes.length === 3) {
-    circle = circumCircle(...nodes);
-  }
 
   return (
     <div
@@ -27,15 +23,15 @@ export const Viewport = () => {
         height="100%"
         onClick={onClick}
       >
-        {circle
-          ? <Circle {...circle} />
-          : null
-        }
+        {nodes.map((focus, i) =>
+          <Site
+            key={i}
+            {...focus}
+          />
+        )}
         {nodes.map((focus, i) =>
           <Parabola
             key={i}
-            focus={focus}
-            directrix={0}
             {...parabolaBezier({
               directrix: 0,
               focus,
