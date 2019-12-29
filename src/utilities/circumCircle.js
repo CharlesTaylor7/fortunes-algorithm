@@ -1,14 +1,14 @@
 const bisector = (
-  { x1, y1 },
-  { x2, y2 }
+  { x: x1, y: y1 },
+  { x: x2, y: y2 },
 ) => ({
   b: { x: (x1 + x2) / 2, y: (y1 + y2) / 2 },
   m: { x: (y1 - y2), y: (x2 - x1) },
 })
 
 const distance = (
-  { x1, y1 },
-  { x2, y2 }
+  { x: x1, y: y1 },
+  { x: x2, y: y2 },
 ) => Math.sqrt((x1 - x2)**2 + (y1 - y2)**2);
 
 export default (point1, point2, point3) => {
