@@ -41,7 +41,7 @@ export const parabolaBezier = ({ focus, directrix, size }) => {
   const c_y = (-1 * e + f) / det;
 
   if (!Number.isFinite(c_x) || !Number.isFinite(c_y)) {
-    const start = { x: 0, y: focus.y };
+    const start = { x: directrix, y: focus.y };
     const end = { x: size.width, y: focus.y };
     return { start, end, control: start };
   }
