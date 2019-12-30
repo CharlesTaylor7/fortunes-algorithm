@@ -20,14 +20,14 @@ class Zipper {
   left() {
     return new Zipper({
       focus: this.focus.left,
-      breadcrumbs: breadcrumbs.push(new Breadcrumb(this.focus, 'left'))
+      breadcrumbs: Stack.push(new Breadcrumb(this.focus, 'left'), breadcrumbs)
     });
   }
 
   right() {
     return new Zipper({
       focus: this.focus.right,
-      breadcrumbs: breadcrumbs.push(new Breadcrumb(this.focus, 'right'))
+      breadcrumbs: Stack.push(new Breadcrumb(this.focus, 'right'), breadcrumbs)
     });
   }
 

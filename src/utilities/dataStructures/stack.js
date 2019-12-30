@@ -1,35 +1,16 @@
 import wu from 'wu'
 
-function push(head) {
-  return new Stack(head, this);
-}
+const push = (head, tail) => new Stack(head, tail);
 
-function pop(num) {
-  const result = [];
-  const stack = this;
-  for (let i = 0; i < num; i++) {
-    if (isEmpty(stack)) {
-      throw new Error();
-    } else {
-      result.push(stack.head);
-      stack = stack.tail;
-    }
-  }
-  result.push(stack);
-  return result;
-};
-
-function isStack(obj) {
-  const { constructor: name } = obj;
-  return name === Empty.name || name === Stack.name;
-}
+const isStack = ({ constructor: name }) =>
+  name === Empty.name ||
+  name === Stack.name;
 
 class Empty {
   constructor() {
-    this[Symbol.iterator] = function* () {}
-    this.push = push.bind(this);
-    this.pop = pop.bind(this);
-    return Object.freeze(this);
+    return Object.freeze({
+      [Symbol.iterator]: function* () {},
+    });
   }
 }
 
@@ -44,8 +25,6 @@ class Stack {
       yield this.head;
       yield* this.tail;
     }
-    this.push = push.bind(this);
-    this.pop = pop.bind(this);
     return Object.freeze(this);
   }
 }
@@ -67,6 +46,7 @@ const fromArray = array =>
 const reverse = stack => fromArray(Array.from(stack).reverse());
 
 export {
+  push,
   empty,
   isEmpty,
   fromArray,
