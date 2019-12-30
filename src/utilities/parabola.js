@@ -19,11 +19,10 @@ export const parabola = ({ focus, directrix }) => {
   return [x, x_prime];
 }
 
-export const parabolaBezier = ({ focus, directrix, size }) => {
+export const parabolaBezier = ({ focus, directrix, y_range }) => {
   const [x, x_prime] = parabola({ focus, directrix });
 
-  const y_i = 0;
-  const y_f = size.height;
+  const [ y_i, y_f ] = y_range;
 
   const x_i = x(y_i);
   const x_f = x(y_f);
@@ -42,7 +41,7 @@ export const parabolaBezier = ({ focus, directrix, size }) => {
 
   if (!Number.isFinite(c_x) || !Number.isFinite(c_y)) {
     const start = { x: directrix, y: focus.y };
-    const end = { x: size.width, y: focus.y };
+    const end = { x: 0, y: focus.y };
     return { start, end, control: start };
   }
 

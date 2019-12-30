@@ -17,7 +17,11 @@ const parabola = ({ focus, directrix }) => {
 const solveQuadratic = (a, b, c) => {
   const discriminant = b**2 - 4*a*c;
   if (discriminant < 0) throw new Error();
-  return (-b - Math.sqrt(discriminant)) / (2 *a)
+  const d_sqrt = Math.sqrt(discriminant);
+  return [
+    (-b + d_sqrt) / (2 *a),
+    (-b - d_sqrt) / (2 *a),
+  ];
 }
 
 export default (focus1, focus2, directrix) => {
@@ -26,5 +30,10 @@ export default (focus1, focus2, directrix) => {
 
   const s = m.x / m.y;
 
-  return solveQuadratic(a, b - s, c + s * p.y - p.x);
+  // a * y**2 + b * y + c = s * (y - p.y) + p.x
+  const [y_1, y_2] = solveQuadratic(a, b - s, c + s * p.y - p.x);
+  const x_1 = s * (y_1 - p.y) + p.x;
+  const x_2 = s * (y_2 - p.y) + p.x;
+
+  return x_1 > x_2 ? y_1 : y_2;
 }

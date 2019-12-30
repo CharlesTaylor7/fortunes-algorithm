@@ -7,10 +7,20 @@ import { Site } from './svg/Site'
 import useNodes from '../hooks/useNodes'
 import circumCircle from '../utilities/circumCircle'
 import { parabolaBezier } from '../utilities/parabola'
+import * as R from 'ramda'
+import intersectParabolas from '../utilities/intersectParabolas'
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
   const { onClick, nodes } = useNodes(size);
+
+  const directrix = size.width;
+  const bounds = R.pipe(
+    R.aperture(2),
+    R.map(([n1, n2]) => intersectParabolas(n1, n2, directrix)),
+    R.prepend(0),
+    R.append(size.height),
+  )(nodes);
 
   return (
     <div
@@ -33,9 +43,9 @@ export const Viewport = () => {
           <Parabola
             key={i}
             {...parabolaBezier({
-              directrix: 0,
               focus,
-              size,
+              directrix,
+              y_range: [bounds[i], bounds[i + 1]],
             })}
           />
         )}
