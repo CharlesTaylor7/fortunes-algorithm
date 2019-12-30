@@ -2,20 +2,20 @@ import wu from 'wu'
 
 const push = (head, tail) => new Stack(head, tail);
 
-const isStack = ({ constructor: name }) =>
-  name === Empty.name ||
-  name === Stack.name;
+const isStack = (obj) =>
+  obj instanceof Empty ||
+  obj instanceof Stack;
 
 class Empty {
   constructor() {
-    return Object.freeze({
-      [Symbol.iterator]: function* () {},
-    });
+    this[Symbol.iterator] = function* () {};
+    return Object.freeze(this);
   }
 }
 
 class Stack {
   constructor(head, tail) {
+    debugger;
     if (!isStack(tail)) {
       throw new Error('Tail must be a stack.')
     }
@@ -43,12 +43,9 @@ const fromArray = array =>
   wu(reverse(array))
     .reduce((stack, elem) => stack.push(elem), empty);
 
-const reverse = stack => fromArray(Array.from(stack).reverse());
-
-export {
+export default {
   push,
   empty,
   isEmpty,
   fromArray,
-  reverse,
 }

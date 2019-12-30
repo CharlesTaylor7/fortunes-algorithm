@@ -4,23 +4,18 @@ import useResizeAware from 'react-resize-aware'
 import { Circle } from './svg/Circle'
 import { Parabola } from './svg/Parabola'
 import { Site } from './svg/Site'
-import useNodes from '../hooks/useNodes'
+import useSites from '../hooks/useSites'
 import circumCircle from '../utilities/circumCircle'
 import { parabolaBezier } from '../utilities/parabola'
 import * as R from 'ramda'
+import Stack from '../utilities/dataStructures/stack'
 import intersectParabolas from '../utilities/intersectParabolas'
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
-  const { onClick, nodes } = useNodes(size);
+  const { onClick, sites } = useSites();
 
   const directrix = size.width;
-  const bounds = R.pipe(
-    R.aperture(2),
-    R.map(([n1, n2]) => intersectParabolas(n1, n2, directrix)),
-    R.prepend(0),
-    R.append(size.height),
-  )(nodes);
 
   return (
     <div
@@ -33,19 +28,19 @@ export const Viewport = () => {
         height="100%"
         onClick={onClick}
       >
-        {nodes.map((focus, i) =>
+        {sites.map((site, i) =>
           <Site
             key={i}
-            {...focus}
+            {...site}
           />
         )}
-        {nodes.map((focus, i) =>
+        {sites.map((focus, i) =>
           <Parabola
             key={i}
             {...parabolaBezier({
               focus,
               directrix,
-              y_range: [bounds[i], bounds[i + 1]],
+              y_range: [0, size.height],
             })}
           />
         )}
