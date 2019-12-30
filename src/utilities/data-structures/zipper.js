@@ -1,6 +1,7 @@
 import BST from './bst'
 import Stack from './stack'
 import * as R from 'ramda'
+import wu from 'wu'
 
 class Breadcrumb {
   constructor(parent, childDirection) {
@@ -12,48 +13,93 @@ class Breadcrumb {
 }
 
 class Zipper {
-  constructor({ node, breadcrumbs }) {
-    return Object.freeze({ node, breadcrumbs })
+  constructor({ focus, breadcrumbs }) {
+    return Object.freeze({ focus, breadcrumbs })
   }
 
   left() {
     return new Zipper({
-      node: this.node.left,
-      breadcrumbs: breadcrumbs.push(new Breadcrumb(this.node, 'left'))
+      focus: this.focus.left,
+      breadcrumbs: breadcrumbs.push(new Breadcrumb(this.focus, 'left'))
     });
   }
 
   right() {
     return new Zipper({
-      node: this.node.right,
-      breadcrumbs: breadcrumbs.push(new Breadcrumb(this.node, 'right'))
+      focus: this.focus.right,
+      breadcrumbs: breadcrumbs.push(new Breadcrumb(this.focus, 'right'))
     });
   }
 
   up() {
-    const [{ node: parent, childDirection }, breadcrumbs ] = this.breadcrumbs.pop(1);
+    const {
+      head: { focus: parent, childDirection },
+      tail,
+    } = this.breadcrumbs;
     return new Zipper({
-      node: R.lensProp(childDirection).set(this.node, parent),
-      breadcrumbs,
+      focus: R.set(R.lensProp(childDirection), this.focus, parent),
+      breadcrumbs: tail,
     });
   }
 
-  insert(payload) {
+  prev() {
 
+  }
+
+  next() {
+
+  }
+
+  insert(payload) {
+    if (Stack.isEmpty(this.breadcrumbs)) {
+      return this.insertAtCurrent(payload)
+    } else {
+      return this.up().insert(payload);
+    }
+  }
+
+  // private
+  insertDownward(payload) {
+    if (BST.isEmpty(this.focus)) {
+      return R.set(R.lensProp('focus'), BST.singleNode(payload), this);
+    } else if (payload.y < this.focus.payload.y) {
+      return this.left().insertDownward(payload);
+    } else {
+      return this.right().insertDownward(payload);
+    }
   }
 
   delete(y) {
-
+    if (Stack.isEmpty(this.breadcrumbs)) {
+      return this.deleteDownward(y)
+    } else {
+      return this.up().delete(y);
+    }
   }
 
-  focusNext() {
-
+  deleteDownward(y) {
+    if (BST.isEmpty(this.focus)) {
+      return this;
+    } else if (y < this.focus.payload.y) {
+      return this.left().deleteDownward(y);
+    } else if (y > this.focus.payload.y) {
+      return this.right().deleteDownward(y);
+    } else {
+      throw new Error("Not Implemented");
+    }
   }
 
-  focusPrev() {
+  save() {
+    return wu(this.breadcrumbs).reduce(({ childDirection }, acc) => acc.push(childDirection))
+  }
 
+  restore(tape) {
+    const { head, tail } = tape;
+    if (head === undefined) return this;
+    if (head === 'left') return this.left().restore(tail);
+    if (head === 'right') return this.right().restore(tail);
+    else throw new Error();
   }
 }
-
 
 export default Zipper;
