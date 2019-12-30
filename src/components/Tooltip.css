@@ -1,0 +1,16 @@
+.tooltip {
+  font: 12pt;
+  font-family: sans-serif;
+  position: absolute;
+  z-index: 1;
+  opacity: 0.5;
+  color: black;
+  background-color: grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.coordinate {
+  margin: 0 10px;
+}

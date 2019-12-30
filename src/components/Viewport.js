@@ -10,6 +10,7 @@ import { parabolaBezier } from '../utilities/parabola'
 import * as R from 'ramda'
 import Stack from '../utilities/dataStructures/stack'
 import intersectParabolas from '../utilities/intersectParabolas'
+import { Tooltip } from './Tooltip'
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
@@ -22,6 +23,7 @@ export const Viewport = () => {
       className="viewport"
     >
       {resizeListener}
+      { sites[0] ? <Tooltip cursor={sites[0]} /> : undefined}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
