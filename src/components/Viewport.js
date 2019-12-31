@@ -1,15 +1,10 @@
 import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
-import { Circle } from './svg/Circle'
 import { Parabola } from './svg/Parabola'
 import { Site } from './svg/Site'
 import useSites from '../hooks/useSites'
-import circumCircle from '../utilities/circumCircle'
 import { parabolaBezier } from '../utilities/parabola'
-import * as R from 'ramda'
-import Stack from '../utilities/dataStructures/stack'
-import intersectParabolas from '../utilities/intersectParabolas'
 import { Tooltip } from './Tooltip'
 
 
