@@ -16,14 +16,20 @@ import { Tooltip } from './Tooltip'
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
   const { onClick, sites } = useSites();
-  const [ cursor, setCursor ] = useState(null)
+  const [ cursor, setCursor ] = useState(null);
+
   const directrix = size.width;
-  const onMouseMove = useCallback(({ nativeEvent: { offsetX: x, offsetY: y }}) => setCursor({ x, y }), [setCursor]);
+  const onMouseMove = useCallback(
+    event => {
+      const { nativeEvent: { offsetX: x, offsetY: y }} = event;
+      setCursor({ x, y })
+    },
+    [setCursor]
+  );
 
   return (
     <div
       className="viewport"
-      onMouseMove={onMouseMove}
     >
       {resizeListener}
       { cursor && cursor.x <= size.width && cursor.y <= size.height
@@ -35,6 +41,7 @@ export const Viewport = () => {
         width="100%"
         height="100%"
         onClick={onClick}
+        onMouseMove={onMouseMove}
       >
         {sites.map((site, i) =>
           <Site
