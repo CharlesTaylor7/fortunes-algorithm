@@ -7,7 +7,6 @@ import useSites from '../hooks/useSites'
 import { parabolaBezier } from '../utilities/parabola'
 import { Tooltip } from './Tooltip'
 
-
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
   const { onClick, sites } = useSites();
@@ -16,28 +15,28 @@ export const Viewport = () => {
   const directrix = size.width;
   const onMouseMove = useCallback(
     event => {
+      event.preventDefault();
       const { nativeEvent: { offsetX: x, offsetY: y }} = event;
-      setCursor({ x, y })
+      setCursor({ x, y });
     },
     [setCursor]
   );
-  const onMouseLeave = () => setCursor(null)
   return (
     <div
       className="viewport"
     >
       {resizeListener}
-      { cursor && cursor.x <= size.width && cursor.y <= size.height
+      { cursor
         ? <Tooltip cursor={cursor} />
-        : undefined
+        : null
       }
       <svg
+        className="svg"
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
         height="100%"
         onClick={onClick}
         onMouseMove={onMouseMove}
-        onMouseLeave={onMouseLeave}
       >
         {sites.map((site, i) =>
           <Site

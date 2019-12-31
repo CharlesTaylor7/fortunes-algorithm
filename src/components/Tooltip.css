@@ -1,11 +1,10 @@
 .tooltip {
-  font: 12pt;
+  font: 10pt;
   font-family: sans-serif;
   position: absolute;
   z-index: 1;
-  opacity: 0.5;
   color: black;
-  background-color: grey;
+  background-color: rgba(0,0,0,0);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -13,5 +12,5 @@
 }
 
 .coordinate {
-  margin: 0 10px;
+  margin: 0;
 }
