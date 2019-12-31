@@ -43,19 +43,24 @@ class Zipper {
   }
 
   prev() {
-
   }
 
   next() {
-
+    if (!BST.isEmpty(this.focus.right)) {
+      return this.right();
+    } else {
+      const { head, tail } = this.breadcrumbs;
+      if (head.childDirection === 'left') {
+        return this.up();
+      } else {
+        throw new Error("not implemented")
+        // return this.up()
+      }
+    }
   }
 
   insert(payload) {
-    if (Stack.isEmpty(this.breadcrumbs)) {
-      return this.insertAtCurrent(payload)
-    } else {
-      return this.up().insert(payload);
-    }
+    return this.reset().insertDownward(payload);
   }
 
   // private
@@ -70,11 +75,7 @@ class Zipper {
   }
 
   delete(y) {
-    if (Stack.isEmpty(this.breadcrumbs)) {
-      return this.deleteDownward(y)
-    } else {
-      return this.up().delete(y);
-    }
+    return this.reset().deleteDownward(y);
   }
 
   deleteDownward(y) {
@@ -99,6 +100,14 @@ class Zipper {
     if (head === 'left') return this.left().restore(tail);
     if (head === 'right') return this.right().restore(tail);
     else throw new Error();
+  }
+
+  reset() {
+    if (Stack.isEmpty(this.breadcrumbs)) {
+      return this;
+    } else {
+      return this.up().reset();
+    }
   }
 }
 
