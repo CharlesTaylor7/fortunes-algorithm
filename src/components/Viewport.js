@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
 import { Circle } from './svg/Circle'
@@ -12,18 +12,24 @@ import Stack from '../utilities/dataStructures/stack'
 import intersectParabolas from '../utilities/intersectParabolas'
 import { Tooltip } from './Tooltip'
 
+
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
   const { onClick, sites } = useSites();
-
+  const [ cursor, setCursor ] = useState(null)
   const directrix = size.width;
+  const onMouseMove = useCallback(({ nativeEvent: { offsetX: x, offsetY: y }}) => setCursor({ x, y }), [setCursor]);
 
   return (
     <div
       className="viewport"
+      onMouseMove={onMouseMove}
     >
       {resizeListener}
-      { sites[0] ? <Tooltip cursor={sites[0]} /> : undefined}
+      { cursor && cursor.x <= size.width && cursor.y <= size.height
+        ? <Tooltip cursor={cursor} />
+        : undefined
+      }
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
