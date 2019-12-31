@@ -21,7 +21,7 @@ export const Viewport = () => {
     },
     [setCursor]
   );
-
+  const onMouseLeave = () => setCursor(null)
   return (
     <div
       className="viewport"
@@ -37,6 +37,7 @@ export const Viewport = () => {
         height="100%"
         onClick={onClick}
         onMouseMove={onMouseMove}
+        onMouseLeave={onMouseLeave}
       >
         {sites.map((site, i) =>
           <Site
