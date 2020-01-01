@@ -8,10 +8,10 @@ export const Tooltip = ({ cursor }) => {
       style={{ left: cursor.x, top: cursor.y }}
     >
       <span className="coordinate">
-        {`X = ${cursor.x}`}
+        {`X = ${cursor.x.toFixed(0)}`}
       </span>
       <span className="coordinate">
-        {`Y = ${cursor.y}`}
+        {`Y = ${cursor.y.toFixed(0)}`}
       </span>
     </div>
   )
