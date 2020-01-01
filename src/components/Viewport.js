@@ -9,11 +9,10 @@ import { Tooltip } from './Tooltip'
 import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
 
 export const Viewport = () => {
-  const [ resizeListener, size ] = useResizeAware()
+  const [ resizeListener, size ] = useResizeAware();
   const { onClick, sites } = useSites();
   const [ cursor, setCursor ] = useState(null);
 
-  const directrix = size.width;
   const onMouseMove = useCallback(
     event => {
       event.preventDefault();
@@ -22,8 +21,10 @@ export const Viewport = () => {
     },
     [setCursor]
   );
-
   const onMouseLeave = useCallback(() => setCursor(null));
+
+  const directrix = size.width;
+
   return (
     <div
       className="viewport"
@@ -33,7 +34,7 @@ export const Viewport = () => {
     >
       {resizeListener}
       { cursor
-        ? <Tooltip cursor={cursor} />
+        ? <Tooltip cursor={cursor} viewportSize={size} />
         : null
       }
       <svg
