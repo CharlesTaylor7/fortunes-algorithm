@@ -22,11 +22,14 @@ export const Viewport = () => {
     },
     [setCursor]
   );
+
+  const onMouseLeave = useCallback(() => setCursor(null));
   return (
     <div
       className="viewport"
       onClick={onClick}
       onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
     >
       {resizeListener}
       { cursor
