@@ -13,6 +13,7 @@ export const Tooltip = ({ cursor, viewportSize }) => {
     style.left -= tooltipSize.width;
   }
 
+  const format = (value) => Math.max(0, value).toFixed(0)
   return (
     <div
       className="tooltip"
@@ -20,10 +21,10 @@ export const Tooltip = ({ cursor, viewportSize }) => {
     >
       {resizeListener}
       <span className="coordinate">
-        {`X = ${cursor.x.toFixed(0)}`}
+        {`X = ${format(cursor.x)}`}
       </span>
       <span className="coordinate">
-        {`Y = ${cursor.y.toFixed(0)}`}
+        {`Y = ${format(cursor.y)}`}
       </span>
     </div>
   )
