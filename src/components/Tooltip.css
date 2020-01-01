@@ -1,6 +1,4 @@
 .tooltip {
-  font: 10pt;
-  font-family: sans-serif;
   position: absolute;
   z-index: 1;
   color: black;
@@ -11,4 +9,9 @@
   align-items: flex-start;
   padding: 20px;
   user-select: none;
+}
+
+.coordinate {
+  font-size: 14pt;
+  font-family: sans-serif;
 }
