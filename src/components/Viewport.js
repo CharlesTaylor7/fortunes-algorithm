@@ -6,6 +6,7 @@ import { Site } from './svg/Site'
 import useSites from '../hooks/useSites'
 import { parabolaBezier } from '../utilities/parabola'
 import { Tooltip } from './Tooltip'
+import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware()
@@ -16,14 +17,16 @@ export const Viewport = () => {
   const onMouseMove = useCallback(
     event => {
       event.preventDefault();
-      const { nativeEvent: { offsetX: x, offsetY: y }} = event;
-      setCursor({ x, y });
+      const offset = getOffsetFromCurrentTarget(event);
+      setCursor(offset);
     },
     [setCursor]
   );
   return (
     <div
       className="viewport"
+      onClick={onClick}
+      onMouseMove={onMouseMove}
     >
       {resizeListener}
       { cursor
@@ -35,8 +38,6 @@ export const Viewport = () => {
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
         height="100%"
-        onClick={onClick}
-        onMouseMove={onMouseMove}
       >
         {sites.map((site, i) =>
           <Site

@@ -1,15 +1,12 @@
 import { useCallback, useState } from 'react'
+import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget';
 
 export default () => {
   const [ sites, setSites ] = useState([]);
 
   const onClick = useCallback(
-    e => {
-      const { nativeEvent: { offsetX, offsetY } } = e;
-      const site = {
-        x: offsetX,
-        y: offsetY,
-      };
+    event => {
+      const site = getOffsetFromCurrentTarget(event);
       setSites(ns => [...ns, site]);
     },
     []
