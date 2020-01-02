@@ -1,33 +1,16 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 
 export const Site = ({ x, y }) => {
-
-  const resetTransform = useCallback(
-    (e) => {
-      e.currentTarget.removeAttribute('transform')
-    },
-    []
-  );
-
-  const scaleBy = useCallback(
-    (factor) => (e) => {
-      const transform = `matrix(
-          ${factor} 0
-          0 ${factor}
-          ${(1-factor)*x} ${(1-factor)*y}
-        )`;
-      e.currentTarget.setAttribute('transform', transform);
-    },
-    [x, y]
-  );
+  const defaultRadius = 4;
+  const [radius, setRadius] = useState(defaultRadius)
 
   return (
     <circle
       className="site"
-      onMouseOver={scaleBy(1.2)}
-      onMouseOut={resetTransform}
+      onMouseOver={() => setRadius(defaultRadius * 1.2)}
+      onMouseOut={() => setRadius(defaultRadius)}
       fill="black"
-      r="4"
+      r={radius}
       cx={x}
       cy={y}
     />
