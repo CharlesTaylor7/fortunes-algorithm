@@ -3,16 +3,23 @@ import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
 import { Parabola } from './svg/Parabola'
 import { Site } from './svg/Site'
-import useSites from '../hooks/useSites'
 import { parabolaBezier } from '../utilities/parabola'
 import { Tooltip } from './Tooltip'
 import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
+import { Shadow } from './svg/gradients/Shadow'
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware();
-  const { onClick, sites } = useSites();
   const [ cursor, setCursor ] = useState(null);
+  const [ sites, setSites ] = useState([]);
 
+  const onClick = useCallback(
+    event => {
+      const site = getOffsetFromCurrentTarget(event);
+      setSites(ns => [...ns, site]);
+    },
+    []
+  );
   const onMouseMove = useCallback(
     event => {
       event.preventDefault();
@@ -21,7 +28,7 @@ export const Viewport = () => {
     },
     [setCursor]
   );
-  const onMouseLeave = useCallback(() => setCursor(null));
+  const onMouseLeave = useCallback(() => setCursor(null), []);
 
   const directrix = size.width;
 
@@ -43,6 +50,9 @@ export const Viewport = () => {
         width="100%"
         height="100%"
       >
+        <defs>
+          <Shadow />
+        </defs>
         {sites.map((site, i) =>
           <Site
             key={i}
@@ -59,6 +69,7 @@ export const Viewport = () => {
             })}
           />
         )}
+
       </svg>
     </div>
   )

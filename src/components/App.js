@@ -4,7 +4,7 @@ import { useFrames } from '../hooks/useFrames'
 import { Viewport } from './Viewport'
 
 export const App = () => {
-  const { frame, forward, backward, append } = useFrames();
+  const { forward, backward, append } = useFrames();
 
   useEffect(() => {
     document.onkeydown = (e) => {
