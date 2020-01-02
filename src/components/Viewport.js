@@ -7,7 +7,7 @@ import { parabolaBezier } from '../utilities/parabola'
 import { Tooltip } from './Tooltip'
 import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
 import { Shadow } from './svg/gradients/Shadow'
-import { Directrix } from './svg/Directrix'
+import { Sweepline } from './svg/Sweepline'
 
 export const Viewport = () => {
   const [ resizeListener, size ] = useResizeAware();
@@ -21,17 +21,28 @@ export const Viewport = () => {
     },
     []
   );
+
+  const [sweeplineX, setSweeplineX] = useState(200);
+  const [sweeplineSelected, setSweeplineSelected] = useState(false);
+  const onClickSweepline = useCallback(
+    event => {
+      event.stopPropagation();
+      setSweeplineSelected(!sweeplineSelected);
+    },
+    [sweeplineSelected, setSweeplineSelected]
+  );
+
   const onMouseMove = useCallback(
     event => {
-      event.preventDefault();
       const offset = getOffsetFromCurrentTarget(event);
+      if (sweeplineSelected) {
+        setSweeplineX(offset.x);
+      }
       setCursor(offset);
     },
-    [setCursor]
+    [sweeplineSelected, setCursor, setSweeplineX]
   );
   const onMouseLeave = useCallback(() => setCursor(null), []);
-
-  const directrix = 0.5 * size.width;
 
   return (
     <div
@@ -54,7 +65,10 @@ export const Viewport = () => {
         <defs>
           <Shadow />
         </defs>
-        <Directrix x={directrix} height={size.height} />
+        <Sweepline
+          x={sweeplineX}
+          onClick={onClickSweepline}
+          height={size.height} />
         {sites.map((site, i) =>
           <Site
             key={i}
@@ -66,7 +80,7 @@ export const Viewport = () => {
             key={i}
             {...parabolaBezier({
               focus,
-              directrix,
+              directrix: sweeplineX,
               y_range: [0, size.height],
             })}
           />
