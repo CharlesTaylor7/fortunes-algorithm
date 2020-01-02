@@ -1,6 +1,4 @@
 import React, { useCallback } from 'react'
-import './Site.css'
-
 
 export const Site = ({ x, y }) => {
 
@@ -26,9 +24,9 @@ export const Site = ({ x, y }) => {
   return (
     <circle
       className="site"
-      strokeWidth="4"
       onMouseOver={scaleBy(1.2)}
       onMouseOut={resetTransform}
+      fill="black"
       r="4"
       cx={x}
       cy={y}
