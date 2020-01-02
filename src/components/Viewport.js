@@ -23,24 +23,24 @@ export const Viewport = () => {
   );
 
   const [sweeplineX, setSweeplineX] = useState(200);
-  const [sweeplineSelected, setSweeplineSelected] = useState(false);
+  const [sweeplineDragging, setSweeplineDragging] = useState(false);
   const onClickSweepline = useCallback(
     event => {
       event.stopPropagation();
-      setSweeplineSelected(!sweeplineSelected);
+      setSweeplineDragging(!sweeplineDragging);
     },
-    [sweeplineSelected, setSweeplineSelected]
+    [sweeplineDragging, setSweeplineDragging]
   );
 
   const onMouseMove = useCallback(
     event => {
       const offset = getOffsetFromCurrentTarget(event);
-      if (sweeplineSelected) {
+      if (sweeplineDragging) {
         setSweeplineX(offset.x);
       }
       setCursor(offset);
     },
-    [sweeplineSelected, setCursor, setSweeplineX]
+    [sweeplineDragging, setCursor, setSweeplineX]
   );
   const onMouseLeave = useCallback(() => setCursor(null), []);
 
@@ -52,8 +52,8 @@ export const Viewport = () => {
       onMouseLeave={onMouseLeave}
     >
       {resizeListener}
-      { cursor
-        ? <Tooltip cursor={cursor} viewportSize={size} />
+      {cursor
+        ? <Tooltip cursor={cursor} viewportSize={size} sweeplineDragging={sweeplineDragging}/>
         : null
       }
       <svg

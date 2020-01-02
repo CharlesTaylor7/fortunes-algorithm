@@ -2,7 +2,7 @@ import React from 'react'
 import './Tooltip.css'
 import useResizeAware from 'react-resize-aware'
 
-export const Tooltip = ({ cursor, viewportSize }) => {
+export const Tooltip = ({ cursor, viewportSize, sweeplineDragging }) => {
   const [ resizeListener, tooltipSize ] = useResizeAware();
   const style = { left: cursor.x, top: cursor.y };
 
@@ -23,9 +23,14 @@ export const Tooltip = ({ cursor, viewportSize }) => {
       <span className="coordinate">
         {`X = ${format(cursor.x)}`}
       </span>
-      <span className="coordinate">
-        {`Y = ${format(cursor.y)}`}
-      </span>
+      {sweeplineDragging
+        ? null
+        : (
+          <span className="coordinate">
+            {`Y = ${format(cursor.y)}`}
+          </span>
+        )
+      }
     </div>
   )
 }
