@@ -4,14 +4,12 @@ import useResizeAware from 'react-resize-aware'
 import { Parabola } from './svg/Parabola'
 import { Site } from './svg/Site'
 import { parabolaBezier } from '../utilities/parabola'
-import { Tooltip } from './Tooltip'
 import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
 import { Sweepline } from './svg/Sweepline'
 import useAnimation from '../hooks/useAnimation'
 
 export const Viewport = () => {
   const [ viewportSizeListener, viewportSize ] = useResizeAware();
-  const [ cursor, setCursor ] = useState(null);
   const [ sites, setSites ] = useState([]);
   const onClick = useCallback(
     event => {
@@ -37,11 +35,9 @@ export const Viewport = () => {
       if (sweeplineDragging) {
         setSweeplineX(offset.x);
       }
-      setCursor(offset);
     },
-    [sweeplineDragging, setCursor, setSweeplineX]
+    [sweeplineDragging, setSweeplineX]
   );
-  const onMouseLeave = useCallback(() => setCursor(null), []);
 
   const [index, setIndex] = useState(-1);
   useEffect(() => {
@@ -66,13 +62,8 @@ export const Viewport = () => {
       className="viewport"
       onClick={onClick}
       onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
     >
       {viewportSizeListener}
-      {cursor
-        ? <Tooltip cursor={cursor} viewportSize={viewportSize} sweeplineDragging={sweeplineDragging}/>
-        : null
-      }
       <svg
         className="svg"
         xmlns="http://www.w3.org/2000/svg"

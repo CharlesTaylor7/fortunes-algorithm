@@ -9,7 +9,6 @@ export const Tooltip = ({ cursor, viewportSize, sweeplineDragging }) => {
 
   const tooltipHeight = tooltipSize.height + margin;
   const tooltipWidth = tooltipSize.width + margin;
-
   let offsetLeft = cursor.x;
   let offsetTop = cursor.y;
 
