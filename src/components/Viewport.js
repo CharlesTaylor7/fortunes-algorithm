@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import './Viewport.css'
 import useResizeAware from 'react-resize-aware'
 import { Parabola } from './svg/Parabola'
@@ -12,6 +12,23 @@ export const Viewport = () => {
   const [ viewportSizeListener, viewportSize ] = useResizeAware();
   const [ cursor, setCursor ] = useState(null);
   const [ sites, setSites ] = useState([]);
+  const [index, setIndex] = useState(-1);
+  useEffect(() => {
+    document.onkeydown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        if (sites[index - 1]) {
+          setIndex(index - 1);
+          setSweeplineX(sites[index - 1].x)
+        }
+      }
+      else if (e.key === 'ArrowRight') {
+        if (sites[index + 1]) {
+          setIndex(index + 1);
+          setSweeplineX(sites[index + 1].x)
+        }
+      }
+    }
+  }, [index, setIndex, sites])
 
   const onClick = useCallback(
     event => {
