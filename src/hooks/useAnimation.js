@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import usePrevious from "./usePrevious"
 
 export default (initialValue) => {
-  const [current, animateValue] = useState(initialValue);
+  const [current, setValue] = useState(initialValue);
   const animationHandle = useRef(null);
 
   const previous = usePrevious(current);
@@ -28,7 +28,6 @@ export default (initialValue) => {
 
   useEffect(
     () => {
-      setFrame(0);
       if (previous === undefined) return;
 
       animationHandle.current = setInterval(
@@ -44,10 +43,16 @@ export default (initialValue) => {
     ? previous + (frame * diff) / frameCount
     : current;
 
-  console.log("current = " + current)
-  console.log("previous = " + previous)
-  console.log("frame = " + frame)
-  console.log ("value = " + value)
+  const counter = useRef(0);
+  counter.current++;
+  if (counter.current < 10) {
+    console.log("frame = " + frame)
+    console.log ("value = " + value)
+  }
+  const animateValue = (value) => {
+    setFrame(0);
+    setValue(value);
+  }
 
   return [value, animateValue];
 }
