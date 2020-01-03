@@ -49,13 +49,13 @@ export const Viewport = () => {
       if (e.key === 'ArrowLeft') {
         if (sites[index - 1]) {
           setIndex(index - 1);
-          animateSweepline(sites[index - 1].x, 5000)
+          animateSweepline(sites[index - 1].x)
         }
       }
       else if (e.key === 'ArrowRight') {
         if (sites[index + 1]) {
           setIndex(index + 1);
-          animateSweepline(sites[index + 1].x, 5000)
+          animateSweepline(sites[index + 1].x)
         }
       }
     }

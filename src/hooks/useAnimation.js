@@ -7,17 +7,19 @@ export default (initialValue) => {
 
   const previous = usePrevious(current);
   console.log("previous = " + previous)
-  const [animationLength, setAnimationLength] = useState(5000);
-
+  const intervalLength = 500;
   const diff = current - previous;
-  const frameCount = 5;
+  const frameCount = Math.abs(diff) / 10;
+  const animationLength = frameCount * intervalLength;
+
   const [frame, setFrame] = useState(null);
   console.log("frame = " + frame)
   useEffect(
     () => {
+      if (previous === undefined) return;
       const handle = setInterval(
         () => setFrame(i => i + 1),
-        animationLength / frameCount
+        intervalLength
       );
       const stop = () => {
         clearInterval(handle);
@@ -29,12 +31,12 @@ export default (initialValue) => {
     [current]
   );
 
-  const value = frame !== null
+  const value = frame !== null && previous !== undefined
     ? previous + (frame * diff) / frameCount
     : current;
   console.log ("value = " + value)
-  const animateValue = (value, animationLength) => {
-    setAnimationLength(animationLength)
+  const animateValue = (value) => {
+    setFrame(0)
     setValue(value);
   }
 
