@@ -5,17 +5,17 @@ export default (initialValue) => {
   const [current, animateValue] = useState(initialValue);
   const animationHandle = useRef(null);
 
-  console.log("current = " + current)
-
   const previous = usePrevious(current);
-  console.log("previous = " + previous)
-  const intervalLength = 10;
   const diff = current - previous;
-  const frameCount = Math.abs(diff);
-  const animationLength = frameCount * intervalLength;
+
+  // pixels per second
+  const speed = 30;
+  const fps = 60;
+
+  const frameCount = Math.ceil(fps * Math.abs(diff) / speed);
+  const intervalLength = 1 / frameCount;
 
   const [frame, setFrame] = useState(null);
-  console.log("frame = " + frame)
 
   const stopAnimation = () => {
     setFrame(null)
@@ -43,6 +43,10 @@ export default (initialValue) => {
   const value = frame !== null && previous !== undefined
     ? previous + (frame * diff) / frameCount
     : current;
+
+  console.log("current = " + current)
+  console.log("previous = " + previous)
+  console.log("frame = " + frame)
   console.log ("value = " + value)
 
   return [value, animateValue];
