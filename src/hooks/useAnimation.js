@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useEffect } from "react"
 import usePrevious from "./usePrevious"
 
 export default (initialValue) => {
   const [current, setValue] = useState(initialValue);
   const previous = usePrevious(current);
+  const [animationLength, setAnimationLength] = useState(5000);
 
   const diff = current - previous;
-  const animationTime = 5000;
   const frameCount = 5;
   const [frame, setFrame] = useState(null);
 
@@ -14,13 +14,13 @@ export default (initialValue) => {
     () => {
       const handle = setInterval(
         () => setFrame(i => i + 1),
-        animationTime / frameCount
+        animationLength / frameCount
       );
       const stop = () => {
         clearInterval(handle);
         setFrame(null);
       }
-      setTimeout(stop, animationTime);
+      setTimeout(stop, animationLength);
       return stop;
     },
     [current]
@@ -30,5 +30,11 @@ export default (initialValue) => {
     ? previous + (frame * diff) / frameCount
     : current;
 
-  return [value, setValue];
+  const animateValue = (value, animationLength) => {
+    setAnimationLength(animationLength)
+    setValue(value);
+  }
+
+  const changeImmediately = (value) => setValue(value, 0)
+  return [value, changeImmediately, animateValue];
 }

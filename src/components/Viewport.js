@@ -7,6 +7,7 @@ import { parabolaBezier } from '../utilities/parabola'
 import { Tooltip } from './Tooltip'
 import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
 import { Sweepline } from './svg/Sweepline'
+import useAnimation from '../hooks/useAnimation'
 
 export const Viewport = () => {
   const [ viewportSizeListener, viewportSize ] = useResizeAware();
@@ -20,7 +21,7 @@ export const Viewport = () => {
     []
   );
 
-  const [sweeplineX, setSweeplineX] = useState(200);
+  const [sweeplineX, setSweeplineX, animateSweepline] = useAnimation(200);
   const [sweeplineDragging, setSweeplineDragging] = useState(false);
   const onClickSweepline = useCallback(
     event => {
@@ -42,22 +43,19 @@ export const Viewport = () => {
   );
   const onMouseLeave = useCallback(() => setCursor(null), []);
 
-  const transitionSweepline = (x) => {
-    
-  }
   const [index, setIndex] = useState(-1);
   useEffect(() => {
     document.onkeydown = (e) => {
       if (e.key === 'ArrowLeft') {
         if (sites[index - 1]) {
           setIndex(index - 1);
-          setSweeplineX(sites[index - 1].x)
+          animateSweepline(sites[index - 1].x, 5000)
         }
       }
       else if (e.key === 'ArrowRight') {
         if (sites[index + 1]) {
           setIndex(index + 1);
-          setSweeplineX(sites[index + 1].x)
+          animateSweepline(sites[index + 1].x, 5000)
         }
       }
     }
