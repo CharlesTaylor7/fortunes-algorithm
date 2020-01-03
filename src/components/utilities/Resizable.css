@@ -1,0 +1,39 @@
+
+.resizable {
+  position: relative;
+  height: 90vh;
+  width: 95vw;
+}
+
+.resizer {
+  position: absolute;
+  background-color: white;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+.top-left {
+  top: -5px;
+  left: -5px;
+  cursor: nwse-resize;
+}
+
+.top-right {
+  top: -5px;
+  right: -5px;
+  cursor: nesw-resize;
+}
+
+.bottom-right {
+  bottom: -5px;
+  right: -5px;
+  cursor: nwse-resize;
+}
+
+.bottom-left {
+  bottom: -5px;
+  left: -5px;
+  cursor: nesw-resize;
+}
