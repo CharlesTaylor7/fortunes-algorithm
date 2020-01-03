@@ -4,13 +4,18 @@ import useResizeAware from 'react-resize-aware'
 
 export const Tooltip = ({ cursor, viewportSize, sweeplineDragging }) => {
   const [ resizeListener, tooltipSize ] = useResizeAware();
-  const style = { left: cursor.x, top: cursor.y };
 
-  if (cursor.y + tooltipSize.height > viewportSize.height) {
-    style.top -= tooltipSize.height
+  const margin = 20;
+  const style = { left: cursor.x, top: cursor.y, margin: `${margin}px` };
+
+  const tooltipHeight = tooltipSize.height + margin;
+  const tooltipWidth = tooltipSize.width + margin;
+
+  if (cursor.y + tooltipHeight > viewportSize.height) {
+    style.top -= tooltipHeight;
   }
-  if (cursor.x + tooltipSize.width > viewportSize.width) {
-    style.left -= tooltipSize.width;
+  if (cursor.x + tooltipWidth > viewportSize.width) {
+    style.left -= tooltipWidth;
   }
 
   const format = (value) => Math.max(0, value).toFixed(0)

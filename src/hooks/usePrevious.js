@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 
 export default (value) => {
   const ref = useRef({ past: null, buffer: null });

@@ -11,9 +11,7 @@ import useAnimation from '../hooks/useAnimation'
 
 export const Viewport = () => {
   const [ viewportSizeListener, viewportSize ] = useResizeAware();
-  // const [ cursor, setCursor ] = useState(null);
-  const cursor = {};
-  const setCursor = () => {};
+  const [ cursor, setCursor ] = useState(null);
   const [ sites, setSites ] = useState([]);
   const onClick = useCallback(
     event => {
@@ -71,7 +69,7 @@ export const Viewport = () => {
       onMouseLeave={onMouseLeave}
     >
       {viewportSizeListener}
-      {false
+      {cursor
         ? <Tooltip cursor={cursor} viewportSize={viewportSize} sweeplineDragging={sweeplineDragging}/>
         : null
       }
