@@ -1,11 +1,13 @@
 import { useRef, useEffect } from 'react'
 
 export default (value) => {
-  const ref = useRef({});
+  const ref = useRef({ past: null, buffer: null });
+  const history = ref.current;
 
-  if (value !== ref.current.buffer) {
-    ref.current = { value: ref.current.buffer, buffer: value }
+  if (value !== history.buffer) {
+    history.past = history.buffer;
+    history.buffer = value;
   }
 
-  return ref.current.value;
+  return history.past;
 }

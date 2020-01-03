@@ -28,8 +28,9 @@ export default (initialValue) => {
 
   useEffect(
     () => {
-      if (previous === undefined) return;
-
+      if (previous === null || frame === null) {
+        return;
+      }
       animationHandle.current = setInterval(
         () => setFrame(i => i + 1),
         intervalLength
@@ -39,20 +40,14 @@ export default (initialValue) => {
     [current]
   );
 
-  const value = frame !== null && previous !== undefined
+  const value = frame !== null
     ? previous + (frame * diff) / frameCount
     : current;
 
-  const counter = useRef(0);
-  counter.current++;
-  if (counter.current < 10) {
-    console.log("frame = " + frame)
-    console.log ("value = " + value)
-  }
   const animateValue = (value) => {
     setFrame(0);
     setValue(value);
-  }
+  };
 
-  return [value, animateValue];
+  return [value, setValue, animateValue];
 }

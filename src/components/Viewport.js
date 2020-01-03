@@ -23,8 +23,7 @@ export const Viewport = () => {
     []
   );
 
-  const [sweeplineX, animateSweepline] = useAnimation(200);
-  const setSweeplineX = animateSweepline;
+  const [sweeplineX, setSweeplineX, animateSweepline] = useAnimation(200);
   const [sweeplineDragging, setSweeplineDragging] = useState(false);
   const onClickSweepline = useCallback(
     event => {
