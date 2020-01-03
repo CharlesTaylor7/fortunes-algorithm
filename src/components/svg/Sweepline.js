@@ -1,17 +1,22 @@
 import React, { useState } from 'react'
+import './Sweepline.css'
 
-export const Sweepline = ({ x, height, onClick }) => {
-  const defaultStroke = { color: 'black', width: 4 };
-  const highlighted = { color: 'yellow', width: 6 };
-  const [stroke, setStroke] = useState(defaultStroke);
+export const Sweepline = ({ x, height, onClick, selected }) => {
+  const defaultColor = 'black';
+  const highlighted = 'yellow';
+
+  const defaultWidth = 2;
+  const hoveringWidth = 6;
+  const [width, setWidth] = useState(defaultWidth);
 
   return (
     <line
-      onMouseOver={() => setStroke(highlighted)}
-      onMouseOut={() => setStroke(defaultStroke)}
+      className="sweepline"
+      onMouseOver={() => setWidth(hoveringWidth)}
+      onMouseOut={() => setWidth(defaultWidth)}
       onClick={onClick}
-      stroke={stroke.color}
-      strokeWidth={stroke.width}
+      stroke={selected ? highlighted : defaultColor}
+      strokeWidth={width}
       x1={x}
       x2={x}
       y1={0}

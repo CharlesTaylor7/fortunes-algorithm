@@ -6,11 +6,10 @@ import { Site } from './svg/Site'
 import { parabolaBezier } from '../utilities/parabola'
 import { Tooltip } from './Tooltip'
 import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
-import { Shadow } from './svg/gradients/Shadow'
 import { Sweepline } from './svg/Sweepline'
 
 export const Viewport = () => {
-  const [ resizeListener, size ] = useResizeAware();
+  const [ viewportSizeListener, viewportSize ] = useResizeAware();
   const [ cursor, setCursor ] = useState(null);
   const [ sites, setSites ] = useState([]);
 
@@ -51,9 +50,9 @@ export const Viewport = () => {
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
     >
-      {resizeListener}
+      {viewportSizeListener}
       {cursor
-        ? <Tooltip cursor={cursor} viewportSize={size} sweeplineDragging={sweeplineDragging}/>
+        ? <Tooltip cursor={cursor} viewportSize={viewportSize} sweeplineDragging={sweeplineDragging}/>
         : null
       }
       <svg
@@ -62,13 +61,12 @@ export const Viewport = () => {
         width="100%"
         height="100%"
       >
-        <defs>
-          <Shadow />
-        </defs>
         <Sweepline
           x={sweeplineX}
           onClick={onClickSweepline}
-          height={size.height} />
+          height={viewportSize.height}
+          selected={sweeplineDragging}
+        />
         {sites.map((site, i) =>
           <Site
             key={i}
@@ -81,7 +79,7 @@ export const Viewport = () => {
             {...parabolaBezier({
               focus,
               directrix: sweeplineX,
-              y_range: [0, size.height],
+              y_range: [0, viewportSize.height],
             })}
           />
         )}
