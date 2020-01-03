@@ -3,9 +3,10 @@ import usePrevious from "./usePrevious"
 
 export default (initialValue) => {
   const [current, setValue] = useState(initialValue);
+  const previous = usePrevious(current);
+  const [frame, setFrame] = useState(null);
   const animationHandle = useRef(null);
 
-  const previous = usePrevious(current);
   const diff = current - previous;
 
   // pixels per second
@@ -15,11 +16,9 @@ export default (initialValue) => {
   const frameCount = Math.ceil(fps * Math.abs(diff) / speed);
   const intervalLength = 1 / frameCount;
 
-  const [frame, setFrame] = useState(null);
-
   const stopAnimation = () => {
-    setFrame(null)
     clearInterval(animationHandle.current);
+    setFrame(null);
   };
 
   if (frame === frameCount) {
@@ -28,9 +27,7 @@ export default (initialValue) => {
 
   useEffect(
     () => {
-      if (previous === null || frame === null) {
-        return;
-      }
+      if (frame === null) return;
       animationHandle.current = setInterval(
         () => setFrame(i => i + 1),
         intervalLength
