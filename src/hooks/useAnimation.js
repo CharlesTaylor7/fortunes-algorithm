@@ -9,12 +9,13 @@ export default (initialValue) => {
 
   const diff = current - previous;
 
-  // pixels per second
-  const speed = 30;
-  const fps = 60;
+  // milliseconds
+  const intervalLength = 20;
 
-  const frameCount = Math.ceil(fps * Math.abs(diff) / speed);
-  const intervalLength = 1 / frameCount;
+  // milliseconds per pixel
+  const msPerPixel = 4;
+
+  const frameCount = Math.ceil(msPerPixel * Math.abs(diff) / intervalLength);
 
   const stopAnimation = () => {
     clearInterval(animationHandle.current);
