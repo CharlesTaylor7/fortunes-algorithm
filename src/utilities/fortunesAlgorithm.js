@@ -1,31 +1,30 @@
 import FlatQueue from 'flatqueue';
+import BST from './dataStructures/bst';
+import Zipper from './dataStructures/zipper';
+import Diagram from './dataStructures/voronoiDiagram';
 
-const edge = (point1, point2) => ({ point1, point2 });
-
-const bst = (left, right, node) => ({ left, right, node });
-
-export const step = (points) => {
+export function* step(points) {
   const eventQueue = new FlatQueue();
   for (let site of points) {
     eventQueue.push(site.x, { type: 'site', site });
   }
 
   let directrix = 0;
-  // Array of arrays of edges
-  const polygons = [];
+  const diagram = new Diagram();
 
-  const beachline = null;
+  const beachline = Zipper.empty;
+  const currentState = () => ({ directrix, beachline, diagram, eventQueue });
 
   while (eventQueue.length > 0) {
+    yield currentState();
     const event = eventQueue.pop();
+    if (event.type === 'site') {
 
-  }
+    } else if (event.type === 'circle') {
 
-  return () => {
-    return {
-      directrix,
-      polygons,
-      eventQueue,
+    } else {
+      throw new Error("Invalid event " + event);
     }
-  };
+  }
+  yield currentState();
 }

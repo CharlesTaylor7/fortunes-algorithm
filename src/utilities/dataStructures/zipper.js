@@ -17,6 +17,8 @@ class Zipper {
     return Object.freeze({ focus, breadcrumbs })
   }
 
+  static empty = new Zipper({ focus: BST.empty, breadcrumbs: Stack.empty });
+
   left() {
     return new Zipper({
       focus: this.focus.left,
