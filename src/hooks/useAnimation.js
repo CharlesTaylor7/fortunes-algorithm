@@ -18,7 +18,7 @@ export default (initialValue) => {
   const frameCount = Math.ceil(msPerPixel * Math.abs(diff) / intervalLength);
 
   const stopAnimation = () => {
-    clearInterval(animationHandle.current);
+    cancelAnimationFrame(animationHandle.current);
     setFrame(null);
   };
 
@@ -29,10 +29,13 @@ export default (initialValue) => {
   useEffect(
     () => {
       if (frame === null) return;
-      animationHandle.current = setInterval(
-        () => setFrame(i => i + 1),
-        intervalLength
-      );
+      const callback = (time) => {
+        console.log('frame!')
+        setFrame(i => i+1);
+        animationHandle.current = requestAnimationFrame(callback);
+      };
+
+      callback();
       return stopAnimation;
     },
     [current]
