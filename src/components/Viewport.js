@@ -16,7 +16,17 @@ export const Viewport = () => {
     viewportSizeListener,
     sweeplineDragging,
     sites,
+    sweeplineRef,
   } = useViewport();
+
+  const sweepline = {
+    x: sweeplineX,
+    onClick: onClickSweepline,
+    height: viewportSize.height,
+    selected: sweeplineDragging,
+    innerRef: sweeplineRef,
+  };
+
   return (
     <div
       className="viewport"
@@ -29,12 +39,7 @@ export const Viewport = () => {
         width="100%"
         height="100%"
       >
-        <Sweepline
-          x={sweeplineX}
-          onClick={onClickSweepline}
-          height={viewportSize.height}
-          selected={sweeplineDragging}
-        />
+        <Sweepline {...sweepline} />
         {sites.map((site, i) =>
           <Site
             key={i}

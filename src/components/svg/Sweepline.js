@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './Sweepline.css'
 
-export const Sweepline = ({ x, height, onClick, selected }) => {
+export const Sweepline = ({ x, height, onClick, selected, innerRef}) => {
   const defaultColor = 'black';
   const highlighted = 'yellow';
 
@@ -11,6 +11,7 @@ export const Sweepline = ({ x, height, onClick, selected }) => {
 
   return (
     <line
+      ref={innerRef}
       className="sweepline"
       onMouseOver={() => setWidth(hoveringWidth)}
       onMouseOut={() => setWidth(defaultWidth)}
