@@ -1,57 +1,30 @@
 import React from 'react'
 import './Viewport.css'
-import { Parabola } from './svg/Parabola'
-import { Site } from './svg/Site'
-import { parabolaBezier } from '../utilities/parabola'
-import { Sweepline } from './svg/Sweepline'
-import useViewport from '../hooks/useViewport'
 
 export const Viewport = () => {
-  const {
-    sweeplineX,
-    onClick,
-    onClickSweepline,
-    onMouseMove,
-    viewportSize,
-    viewportSizeListener,
-    sweeplineDragging,
-    sites,
-  } = useViewport();
+  const opacity = 0.5;
   return (
     <div
       className="viewport"
-      onClick={onClick}
-      onMouseMove={onMouseMove}
     >
-      {viewportSizeListener}
       <svg
         className="svg"
-        width="100%"
-        height="100%"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="midXmidY meet"
       >
-        <Sweepline
-          x={sweeplineX}
-          onClick={onClickSweepline}
-          height={viewportSize.height}
-          selected={sweeplineDragging}
-        />
-        {sites.map((site, i) =>
-          <Site
-            key={i}
-            {...site}
-          />
-        )}
-        {sites.map((focus, i) =>
-          <Parabola
-            key={i}
-            {...parabolaBezier({
-              focus,
-              directrix: sweeplineX,
-              y_range: [0, viewportSize.height],
-            })}
-          />
-        )}
-
+        <defs>
+          <filter id="filter">
+            <feComponentTransfer>
+              <feFuncA type="table" tableValues={`0 ${opacity} ${opacity}`} />
+            </feComponentTransfer>
+          </filter>
+        </defs>
+        <g
+          filter="url(#filter)"
+        >
+          <path d="M 0 0 L 100 100" stroke="grey" stroke-width="2" opacity="0.5" />
+          <path d="M 100 0 L 0 100" stroke="grey" stroke-width="2" opacity="0.5"/>
+        </g>
       </svg>
     </div>
   )

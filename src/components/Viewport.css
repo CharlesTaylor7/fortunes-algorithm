@@ -1,7 +1,12 @@
 .viewport {
+  display: flex;
   position: relative;
-  height: 90vh;
-  width: 95vw;
+  width: 80v;
+  max-height: 80vmin;
   background-color: white;
   padding: 0;
+}
+
+.svg {
+  width: 100%;
 }
