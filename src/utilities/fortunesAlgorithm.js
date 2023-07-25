@@ -7,8 +7,8 @@ export function* step(points) {
   const deletedEvents = new FlatQueue();
   const eventQueue = new FlatQueue();
   for (let site of points) {
-    const siteEvent = { type: 'site', site, x: site.x };
-    eventQueue.push(siteEvent, siteEvent.x);
+    const siteEvent = { type: 'site', site };
+    eventQueue.push(siteEvent);
   }
 
   let directrix = 0;
@@ -46,7 +46,7 @@ export function* step(points) {
         x: getX(circle1),
       });
 
-      const circle2 = circumCircle(p2, pj, pi);
+      const circle2 = circumCircle(pi, pj, p3);
       const circleEvent2 = ({
         type: 'circle',
         sites: [pi, pj, p3],

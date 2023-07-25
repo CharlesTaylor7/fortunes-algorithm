@@ -1,0 +1,18 @@
+procs:
+  Jest:
+    shell: yarn test --watchAll
+
+  Typescript:
+    shell: yarn typecheck --watch
+
+  Dev Server :
+    shell: yarn start
+
+  Prettier:
+    shell: find src/ | entr -s 'yarn format'
+    autostart: false
+
+  Test Coverage:
+    # Mac only; sorry
+    shell: yarn test --coverage && open -a 'Google Chrome' coverage/lcov-report/index.html
+    autostart: false
