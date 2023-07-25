@@ -1,12 +1,22 @@
 // focus: f_x, f_y
 // directrix: x = d
+// 1. Equation defining a parabola
 // Math.abs(x - d) = Math.sqrt((x - f_x)**2 + (y-f_y)**2)
+//
+// 2. Square each side
 // (x - d)**2 = (x - f_x)**2 + (y-f_y)**2
 
+// 3. Expand
 // x**2 - 2*d*x + d**2 = x**2 - 2*f_x*x + f_x**2 + (y-f_y)**2
 
+// 4. Rearrange terms to isolate x
 // 2*(f_x-d)*x = (y-f_y)**2 - d**2 + f_x**2
+//
+// 5. Divide to a formula for x
 // x = ((y - f_y)**2 + f_x**2 - d**2) / (2 * (f_x - d))
+//
+// 6. Take the derivative dx/dy
+// x' = (y - f_y) / (f_x - d)
 export const parabola = ({ focus, directrix }) => {
   const { x: f_x, y: f_y } = focus;
   const d = directrix;
