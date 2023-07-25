@@ -39,6 +39,8 @@ export const parabolaBezier = ({ focus, directrix, y_range }) => {
   const start = { x: x_i, y: y_i }
   const end = { x: x_f, y: y_f }
 
+  // control point is determined by
+  // intersecting the two tangent lines emanating between the two curves.
   const m1 = x_prime(y_i);
   const m2 = x_prime(y_f);
 
