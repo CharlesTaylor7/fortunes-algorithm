@@ -1,0 +1,3 @@
+- [ ] Visual for algorithm in progress
+- [ ] Vet numerical algorithms for numerical stability
+- [ ] Swap out CRA for Vite
