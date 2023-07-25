@@ -29,6 +29,7 @@ export const parabola = ({ focus, directrix }) => {
   return [x, x_prime];
 }
 
+
 export const parabolaBezier = ({ focus, directrix, y_range }) => {
   const [x, x_prime] = parabola({ focus, directrix });
 

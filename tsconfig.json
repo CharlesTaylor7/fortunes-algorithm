@@ -17,9 +17,6 @@
     "jsx": "preserve",
     "strict": true,
     "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"]
-    },
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

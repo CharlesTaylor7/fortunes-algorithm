@@ -1,47 +1,94 @@
 import PriorityQueue from 'flatqueue'
-import { BST } from '@/utilities/binary-search-tree'
+import intersectParabolas from './intersectParabolas'
 
 // Reference:
 // https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html
-export type Event = { type: 'site', site: Point } | { type: 'circle' }
+export type Event = { type: 'site', siteIndex: number } | { type: 'circle' }
 
-export function voronoiDiagram(sites: Array<Point>): Diagram {
-  let queue: PriorityQueue<Event> = new PriorityQueue()
-  for (let site of sites) {
-    queue.push({ 'type': 'site', site }, site.x)
+export function voronoiDiagram(points: Array<Point>, box: BoundingBox): Diagram {
+  let diagram = new Diagram(points, box)
+
+  while (diagram.queue.length > 0) {
+    diagram.step()
   }
-  while (queue.length > 0) {
-    const event = queue.pop()
-    if (event === undefined) {
-      throw new Error();
-    }
-    if (event.type === 'site') {
-
-    }
-  }
-
-  let diagram = {
-    sites: [],
-    cells: [],
-    vertices: [],
-    edges: [],
-  }
-
   return diagram
 }
 
-// data definitions are linked structures based on:
-// https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html#diagram-data-structure
-// Time will tell if this can't be simplified
-export type Diagram = {
-  sites: Array<Point> 
-  cells: Array<Cell>
-  vertices: Array<Point>
-  edges: Array<Edge>
+type BoundingBox = {
+  width: number
+  height: number,
+}
+// https://en.wikipedia.org/wiki/Doubly_connected_edge_list
+// DCEL
+class Diagram {
+  sites: Array<Site> = []
+  sweeplineX: number = 0
+  beachline?: BeachNode
+  queue: PriorityQueue<Event> = new PriorityQueue()
+  boundingBox: BoundingBox 
+
+  constructor(points: Array<Point>, boundingBox: BoundingBox) {
+    this.boundingBox = boundingBox
+    for (let point of points) {
+      const site: Site = {
+        index: this.sites.length,
+        point: point
+      }
+      this.sites.push(site)
+      this.queue.push({ 'type': 'site', siteIndex: site.index }, point.x)
+    }
+  }
+
+  step() {
+    const event = this.queue.pop()
+    if (event === undefined) return 
+    if (event.type === 'site') {
+      this.insertBeachNode(event.siteIndex)
+    }
+  }
+
+  insertBeachNode(siteIndex: number) {
+    const node = new BeachNode(siteIndex)
+    const site = this.sites[siteIndex]
+    this.sweeplineX = site.point.x
+    if (this.beachline === undefined) {
+      this.beachline = node;
+      return
+    }
+
+    let current = this.beachline
+    while (current) {
+      return 
+    }
+  }
+
+  nextBreakpoint(node: BeachNode): number | undefined {
+    if (node.next) {
+      return intersectParabolas(this.sites[node.siteIndex].point, this.sites[node.next.siteIndex].point, this.sweeplineX)
+    }
+  }
+
+  prevBreakpoint(node: BeachNode): number | undefined {
+    if (node.prev) {
+      return intersectParabolas(this.sites[node.prev.siteIndex].point, this.sites[node.siteIndex].point, this.sweeplineX)
+    }
+  }
+}
+
+// TODO: balance these
+class BeachNode {
+  siteIndex: number
+  next?: BeachNode
+  prev?: BeachNode
+
+  constructor(siteIndex: number) {
+    this.siteIndex = siteIndex
+  }
+
 }
 
 // each site node in the beachline is the focus of a parabola
-export type Beachline = BST<number, Site>;
+///export type Beachline = BST<number, Site>;
 
 export type Point = { 
   x: number
@@ -51,19 +98,13 @@ export type Point = {
 export type Site = {
   index: number
   point: Point
-  cell: Cell
+  edge?: HalfEdge
 }
 
-export type Cell = {
-  site: Site
-  edge: Edge
-}
-
-export type Edge = {
+export type HalfEdge = {
   origin: Point
-  destination: Point
-  twin: Edge
-  incidentCell: Cell
-  prev: Edge,
-  next: Edge,
+  twin: HalfEdge
+  site: Site
+  prev: HalfEdge,
+  next: HalfEdge,
 }
