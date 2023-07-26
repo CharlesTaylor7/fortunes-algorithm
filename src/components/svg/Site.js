@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 export const Site = ({ x, y }) => {
-  const defaultRadius = 4;
+  const defaultRadius = 4
   const [radius, setRadius] = useState(defaultRadius)
 
   return (
@@ -14,5 +14,5 @@ export const Site = ({ x, y }) => {
       cx={x}
       cy={y}
     />
-  );
+  )
 }

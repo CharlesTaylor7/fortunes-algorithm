@@ -5,8 +5,8 @@ import useAnimation from '../hooks/useAnimation'
 import useResizeAware from 'react-resize-aware'
 
 function useDiagram() {
-  const [_, setDummy] = useState(0);
-  const rerender = useCallback(() => setDummy(i => i + 1), [setDummy])
+  const [_, setDummy] = useState(0)
+  const rerender = useCallback(() => setDummy((i) => i + 1), [setDummy])
   const diagramRef = useRef()
   if (!diagramRef.current) {
     diagramRef.current = new Diagram()
@@ -16,19 +16,19 @@ function useDiagram() {
 }
 
 export default () => {
-  const [ diagramRef, rerender ] = useDiagram()
-  const [ viewportSizeListener, viewportSize ] = useResizeAware();
-  const [ vertexPlacementAllowed, setVertexPlacement ] = useState(true)
+  const [diagramRef, rerender] = useDiagram()
+  const [viewportSizeListener, viewportSize] = useResizeAware()
+  const [vertexPlacementAllowed, setVertexPlacement] = useState(true)
   const onClick = useCallback(
-    event => {
+    (event) => {
       if (!vertexPlacementAllowed) return
-      const point = getOffsetFromCurrentTarget(event);
+      const point = getOffsetFromCurrentTarget(event)
       console.log(point)
       diagramRef.current.newSite(point)
       rerender()
     },
-    [vertexPlacementAllowed]
-  );
+    [vertexPlacementAllowed],
+  )
 
   // effects
   useEffect(() => {
@@ -37,7 +37,7 @@ export default () => {
 
   useEffect(() => {
     document.onkeydown = (e) => {
-      console.log("key down", e.key)
+      console.log('key down', e.key)
       // next
       if (e.key === 'Enter') {
         setVertexPlacement(false)
@@ -58,5 +58,5 @@ export default () => {
     viewportSize,
     viewportSizeListener,
     onClick,
-  };
+  }
 }

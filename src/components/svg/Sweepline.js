@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import './Sweepline.css'
 
 export const Sweepline = ({ x, height, onClick, selected }) => {
-  const defaultColor = 'black';
-  const highlighted = 'yellow';
+  const defaultColor = 'black'
+  const highlighted = 'yellow'
 
-  const defaultWidth = 2;
-  const hoveringWidth = 6;
-  const [width, setWidth] = useState(defaultWidth);
+  const defaultWidth = 2
+  const hoveringWidth = 6
+  const [width, setWidth] = useState(defaultWidth)
 
   return (
     <line

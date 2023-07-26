@@ -3,9 +3,9 @@ import intersectParabolas from './intersectParabolas'
 
 // Reference:
 // https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html
-export type Event = { type: 'site', siteIndex: number } | { type: 'circle' }
+export type Event = { type: 'site'; siteIndex: number } | { type: 'circle' }
 
-type BoundingBox = { height: number, width: number }
+type BoundingBox = { height: number; width: number }
 
 // https://en.wikipedia.org/wiki/Doubly_connected_edge_list
 export class Diagram {
@@ -16,7 +16,7 @@ export class Diagram {
   boundingBox: BoundingBox = { height: 0, width: 0 }
 
   restart() {
-    const locations = this.sites.map(s => s.point)
+    const locations = this.sites.map((s) => s.point)
 
     this.sites = []
     this.sweeplineX = 0
@@ -30,15 +30,15 @@ export class Diagram {
   newSite(point: Point) {
     const site: Site = {
       index: this.sites.length,
-      point: point
+      point: point,
     }
     this.sites.push(site)
-    this.queue.push({ 'type': 'site', siteIndex: site.index }, point.x)
+    this.queue.push({ type: 'site', siteIndex: site.index }, point.x)
   }
 
   step() {
     const event = this.queue.pop()
-    if (event === undefined) return 
+    if (event === undefined) return
     if (event.type === 'site') {
       this.insertBeachNode(event.siteIndex)
     }
@@ -49,7 +49,7 @@ export class Diagram {
     const site = this.sites[siteIndex]
     this.sweeplineX = site.point.x
     if (this.beachline === undefined) {
-      this.beachline = node;
+      this.beachline = node
       return
     }
 
@@ -82,13 +82,21 @@ export class Diagram {
 
   nextBreakpoint(node: BeachNode): number | undefined {
     if (node.next) {
-      return intersectParabolas(this.sites[node.siteIndex].point, this.sites[node.next.siteIndex].point, this.sweeplineX)
+      return intersectParabolas(
+        this.sites[node.siteIndex].point,
+        this.sites[node.next.siteIndex].point,
+        this.sweeplineX,
+      )
     }
   }
 
   prevBreakpoint(node: BeachNode): number | undefined {
     if (node.prev) {
-      return intersectParabolas(this.sites[node.prev.siteIndex].point, this.sites[node.siteIndex].point, this.sweeplineX)
+      return intersectParabolas(
+        this.sites[node.prev.siteIndex].point,
+        this.sites[node.siteIndex].point,
+        this.sweeplineX,
+      )
     }
   }
 }
@@ -107,7 +115,7 @@ class BeachNode {
 // each site node in the beachline is the focus of a parabola
 ///export type Beachline = BST<number, Site>;
 
-export type Point = { 
+export type Point = {
   x: number
   y: number
 }
@@ -123,6 +131,6 @@ export type HalfEdge = {
   origin: Point
   twin: HalfEdge
   site: Site
-  prev: HalfEdge,
-  next: HalfEdge,
+  prev: HalfEdge
+  next: HalfEdge
 }

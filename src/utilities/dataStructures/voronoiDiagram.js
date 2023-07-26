@@ -1,5 +1,3 @@
-class Diagram {
+class Diagram {}
 
-}
-
-export default Diagram;
+export default Diagram

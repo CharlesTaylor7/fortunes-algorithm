@@ -1,10 +1,9 @@
-
-const empty = new Empty();
-const isEmpty = (tree) => tree instanceof Empty;
+const empty = new Empty()
+const isEmpty = (tree) => tree instanceof Empty
 
 class Empty {
   constructor() {
-    return Object.freeze({});
+    return Object.freeze({})
   }
 }
 
@@ -15,13 +14,13 @@ const create = (payload, left, right) =>
     right,
   })
 
-const singleNode = (payload) => create(payload, empty, empty);
+const singleNode = (payload) => create(payload, empty, empty)
 
 function* inorderTraversal(tree) {
-  if (isEmpty(tree)) return;
-  yield* traverse(tree.left);
-  yield tree;
-  yield* traverse(tree.right);
+  if (isEmpty(tree)) return
+  yield* traverse(tree.left)
+  yield tree
+  yield* traverse(tree.right)
 }
 
 export default {
