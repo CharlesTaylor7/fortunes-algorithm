@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react'
 import { Diagram } from '../utilities/fortune'
 import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
 import useAnimation from '../hooks/useAnimation'
-import useResizeAware from 'react-resize-aware'
+import useResizeAware from '../hooks/useResizeAware'
 
 function useDiagram() {
   const [_, setDummy] = useState(0)
@@ -17,7 +17,7 @@ function useDiagram() {
 
 export default () => {
   const [diagramRef, rerender] = useDiagram()
-  const [viewportSizeListener, viewportSize] = useResizeAware()
+  const [viewportRef, viewportBounds] = useResizeAware()
   const [vertexPlacementAllowed, setVertexPlacement] = useState(true)
   const onClick = useCallback(
     (event) => {
@@ -32,8 +32,8 @@ export default () => {
 
   // effects
   useEffect(() => {
-    diagramRef.current.boundingBox = viewportSize
-  }, [viewportSize])
+    diagramRef.current.boundingBox = viewportBounds
+  }, [viewportBounds])
 
   useEffect(() => {
     document.onkeydown = (e) => {
@@ -55,8 +55,8 @@ export default () => {
 
   return {
     diagram: diagramRef.current,
-    viewportSize,
-    viewportSizeListener,
+    viewportBounds,
+    viewportRef,
     onClick,
   }
 }
