@@ -1,9 +1,9 @@
 {
-  "name": "befunge-editor",
+  "name": "voronoi-diagrams",
   "private": true,
   "version": "0.0.0",
   "license": "MIT",
-  "homepage": "https://charlestaylor7.github.io/befunge-editor",
+  "homepage": "https://charlestaylor7.github.io/voronoi-diagrams",
   "scripts": {
     "dev": "vite --port 3000",
     "build": "tsc && vite build",
@@ -28,7 +28,6 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.0.0",
     "@types/jest": "^29.0.0",
-    "@types/ramda": "^0.29.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react-swc": "^3.3.2",
