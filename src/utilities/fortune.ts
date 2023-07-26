@@ -1,19 +1,19 @@
 import PriorityQueue from 'flatqueue'
-import intersectParabolas from './intersectParabolas'
+import { intersect as intersectParabolas } from '@/utilities/parabola'
+import type { IDiagram, IBeachNode, Site, HalfEdge, BoundingBox, Point, Event } from '@/utilities/types'
+
+export function diagram(): IDiagram {
+  return new Diagram()
+}
 
 // Reference:
 // https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html
-export type Event = { type: 'site'; siteIndex: number } | { type: 'circle' }
-
-type BoundingBox = { height: number; width: number }
-
-// https://en.wikipedia.org/wiki/Doubly_connected_edge_list
-export class Diagram {
+class Diagram implements IDiagram {
   sites: Array<Site> = []
   sweeplineX: number = 0
   beachline?: BeachNode
   queue: PriorityQueue<Event> = new PriorityQueue()
-  boundingBox: BoundingBox = { height: 0, width: 0 }
+  bounds: BoundingBox = { height: 0, width: 0 }
 
   restart() {
     const locations = this.sites.map((s) => s.point)
@@ -57,12 +57,12 @@ export class Diagram {
     while (true) {
       const nextB = this.nextBreakpoint(current)
       if (nextB !== undefined && site.point.y > nextB) {
-        current = current.next
+        current = current.next!
         continue
       }
       const prevB = this.prevBreakpoint(current)
       if (prevB !== undefined && site.point.y < prevB) {
-        current = current.prev
+        current = current.prev!
         continue
       }
       break
@@ -102,35 +102,12 @@ export class Diagram {
 }
 
 // TODO: balance these
-class BeachNode {
+class BeachNode implements IBeachNode {
   siteIndex: number
-  next?: BeachNode
-  prev?: BeachNode
+  next?: IBeachNode
+  prev?: IBeachNode
 
   constructor(siteIndex: number) {
     this.siteIndex = siteIndex
   }
-}
-
-// each site node in the beachline is the focus of a parabola
-///export type Beachline = BST<number, Site>;
-
-export type Point = {
-  x: number
-  y: number
-}
-
-export type Site = {
-  index: number
-  point: Point
-  edge?: HalfEdge
-}
-
-// DCEL
-export type HalfEdge = {
-  origin: Point
-  twin: HalfEdge
-  site: Site
-  prev: HalfEdge
-  next: HalfEdge
 }

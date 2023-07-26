@@ -1,15 +1,19 @@
+import type { Ref } from 'react'
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { Diagram } from '../utilities/fortune'
-import getOffsetFromCurrentTarget from '../utilities/getOffsetFromCurrentTarget'
-import useAnimation from '../hooks/useAnimation'
-import useResizeAware from '../hooks/useResizeAware'
+import type { IDiagram } from '@/utilities/types'
+import { diagram } from '@/utilities/fortune'
+import getOffsetFromCurrentTarget from '@/utilities/getOffsetFromCurrentTarget'
+import useAnimation from '@/hooks/useAnimation'
+import useResizeAware from '@/hooks/useResizeAware'
 
-function useDiagram() {
+type UseDiagramOutput = [Ref<IDiagram>, () => void]
+
+function useDiagram(): UseDiagramOutput {
   const [_, setDummy] = useState(0)
   const rerender = useCallback(() => setDummy((i) => i + 1), [setDummy])
-  const diagramRef = useRef()
+  const diagramRef = useRef<IDiagram>(null!)
   if (!diagramRef.current) {
-    diagramRef.current = new Diagram()
+    diagramRef.current = diagram()
   }
 
   return [diagramRef, rerender]
@@ -20,7 +24,7 @@ export default () => {
   const [viewportRef, viewportBounds] = useResizeAware()
   const [vertexPlacementAllowed, setVertexPlacement] = useState(true)
   const onClick = useCallback(
-    (event) => {
+    (event: MouseEvent) => {
       if (!vertexPlacementAllowed) return
       const point = getOffsetFromCurrentTarget(event)
       console.log(point)
@@ -32,7 +36,7 @@ export default () => {
 
   // effects
   useEffect(() => {
-    diagramRef.current.boundingBox = viewportBounds
+    diagramRef.current.bounds = viewportBounds
   }, [viewportBounds])
 
   useEffect(() => {

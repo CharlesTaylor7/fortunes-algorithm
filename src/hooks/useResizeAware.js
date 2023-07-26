@@ -6,7 +6,7 @@ export default function useResizeAware() {
 
   useEffect(() => {
     setBounds(ref.current.getBoundingClientRect())
-    ref.current.addEventListener("resize", (e) => {
+    ref.current.addEventListener('resize', (e) => {
       setBounds(ref.current.getBoundingClientRect())
     })
   }, [setBounds, ref.current])
