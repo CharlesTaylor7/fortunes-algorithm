@@ -10,8 +10,8 @@ export default function Beachline(props: Props) {
   const { diagram } = props
   return (
     <>
-      {beziers(diagram).map((props) => (
-        <Parabola {...props} />
+      {beziers(diagram).map((props, i) => (
+        <Parabola key={i} {...props} />
       ))}
     </>
   )

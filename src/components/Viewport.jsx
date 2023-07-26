@@ -16,16 +16,6 @@ export const Viewport = () => {
         {diagram.sites.map((site, i) => (
           <Site key={i} {...site.point} />
         ))}
-        {diagram.sites.map((site, i) => (
-          <Parabola
-            key={i}
-            {...parabolaBezier({
-              focus: site.point,
-              directrix: diagram.sweeplineX,
-              y_range: [0, viewportBounds.height],
-            })}
-          />
-        ))}
         <Beachline diagram={diagram} />
       </svg>
     </div>

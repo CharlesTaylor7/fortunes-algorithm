@@ -84,9 +84,12 @@ const parabolaCoefficients = ({ focus, directrix }: Parabola) => {
   return [(offset + f_y ** 2) / denominator, (-2 * f_y) / denominator, 1 / denominator]
 }
 
-const solveQuadratic = (a: number, b: number, c: number) => {
+const solveQuadratic = (a: number, b: number, c: number): [number, number] => {
   const discriminant = b ** 2 - 4 * a * c
-  if (discriminant < 0) throw new Error()
+  if (discriminant < 0) {
+    console.error("negative discriminant", {a,b,c,discriminant})
+    return [0, 0]
+  }
   const d_sqrt = Math.sqrt(discriminant)
   return [(-b + d_sqrt) / (2 * a), (-b - d_sqrt) / (2 * a)]
 }

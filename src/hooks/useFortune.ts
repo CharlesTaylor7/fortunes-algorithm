@@ -1,4 +1,4 @@
-import type { Ref } from 'react'
+import type { RefObject } from 'react'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import type { IDiagram } from '@/utilities/types'
 import { diagram } from '@/utilities/fortune'
@@ -6,9 +6,8 @@ import getOffsetFromCurrentTarget from '@/utilities/getOffsetFromCurrentTarget'
 import useAnimation from '@/hooks/useAnimation'
 import useResizeAware from '@/hooks/useResizeAware'
 
-type UseDiagramOutput = [Ref<IDiagram>, () => void]
 
-function useDiagram(): UseDiagramOutput {
+function useDiagram(): [IDiagram, () => void] {
   const [_, setDummy] = useState(0)
   const rerender = useCallback(() => setDummy((i) => i + 1), [setDummy])
   const diagramRef = useRef<IDiagram>(null!)
@@ -16,11 +15,11 @@ function useDiagram(): UseDiagramOutput {
     diagramRef.current = diagram()
   }
 
-  return [diagramRef, rerender]
+  return [diagramRef.current, rerender]
 }
 
 export default () => {
-  const [diagramRef, rerender] = useDiagram()
+  const [diagram, rerender] = useDiagram()
   const [viewportRef, viewportBounds] = useResizeAware()
   const [vertexPlacementAllowed, setVertexPlacement] = useState(true)
   const onClick = useCallback(
@@ -28,7 +27,7 @@ export default () => {
       if (!vertexPlacementAllowed) return
       const point = getOffsetFromCurrentTarget(event)
       console.log(point)
-      diagramRef.current.newSite(point)
+      diagram.newSite(point)
       rerender()
     },
     [vertexPlacementAllowed],
@@ -36,7 +35,7 @@ export default () => {
 
   // effects
   useEffect(() => {
-    diagramRef.current.bounds = viewportBounds
+    diagram.bounds = viewportBounds
   }, [viewportBounds])
 
   useEffect(() => {
@@ -45,20 +44,20 @@ export default () => {
       // next
       if (e.key === 'Enter') {
         setVertexPlacement(false)
-        diagramRef.current.step()
+        diagram.step()
         rerender()
       }
       // reset
       if (e.key === 'r') {
         setVertexPlacement(true)
-        diagramRef.current.restart()
+        diagram.restart()
         rerender()
       }
     }
   }, [])
 
   return {
-    diagram: diagramRef.current,
+    diagram,
     viewportBounds,
     viewportRef,
     onClick,
