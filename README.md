@@ -1,6 +1,6 @@
 ## Fortune's algorithm
 
-This is an implementation of [Fortune's algorithm(https://en.wikipedia.org/wiki/Fortune%27s_algorithm) for constructing [Voronoi Diagrams](https://en.wikipedia.org/wiki/Voronoi_diagram). 
+This is an implementation of [Fortune\'s algorithm](https://en.wikipedia.org/wiki/Fortune%27s_algorithm) for constructing [Voronoi Diagrams](https://en.wikipedia.org/wiki/Voronoi_diagram). 
 Its a web app that animates the algorithm to aid with understanding.
 
 
