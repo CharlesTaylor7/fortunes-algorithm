@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
+import './Site.css'
 
 type Props = {
   radius: number
   highlight: boolean
-  setHover: (hover: boolean) => void
+  onHover: (hover: boolean) => void
   x: number
   y: number
+  label: string
 }
 
 Site.defaultProps = {
@@ -14,14 +16,19 @@ Site.defaultProps = {
 
 export function Site(props: Props) {
   return (
-    <circle
-      className="site"
-      onMouseOver={() => props.setHover(true)}
-      onMouseOut={() => props.setHover(false)}
-      fill="black"
-      r={props.highlight ? props.radius * 1.2 : props.radius}
-      cx={props.x}
-      cy={props.y}
-    />
+    <g transform={`translate(${props.x}, ${props.y})`}>
+      <circle
+        className="site"
+        onMouseOver={() => props.onHover(true)}
+        onMouseOut={() => props.onHover(false)}
+        fill="black"
+        r={props.highlight ? props.radius * 1.2 : props.radius}
+        cx={0}
+        cy={0}
+      />
+      <text className="site-label" x={4} y={-4}>
+        {props.label}
+      </text>
+    </g>
   )
 }

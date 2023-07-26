@@ -13,14 +13,18 @@ type Props = {
 export default function Beachline(props: Props) {
   return (
     <>
-      {beachSegments(props.diagram).map((segment, i) => (
-        <Parabola
-          key={i}
-          highlight={props.siteInfo.get(segment.siteIndex)?.highlighted || false}
-          onHover={props.onHover(segment.siteIndex)}
-          {...segment.bezier}
-        />
-      ))}
+      {beachSegments(props.diagram).map((segment, i) => {
+        const info = props.siteInfo.get(segment.siteIndex)!
+        return (
+          <Parabola
+            key={i}
+            highlight={info.highlighted}
+            siteLabel={info.label}
+            onHover={props.onHover(segment.siteIndex)}
+            {...segment.bezier}
+          />
+        )
+      })}
     </>
   )
 }
@@ -51,11 +55,16 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
     }
 
     if (start > end) {
-      console.error('start exceeds end', {
-        next: node.next && loc(diagram, node.next),
-        prev: node.prev && loc(diagram, node.prev),
-        focus: loc(diagram, node),
-      })
+      /* 
+      console.error(
+        'start exceeds end',
+         {
+          next: node.next && loc(diagram, node.next),
+          prev: node.prev && loc(diagram, node.prev),
+          focus: loc(diagram, node),
+        }
+      )
+      */
     }
     beziers.push({
       siteIndex: node.siteIndex,
@@ -66,7 +75,6 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
       }),
     })
     const b = beziers[beziers.length - 1]
-    console.log('start', b.bezier.start.y, 'end', b.bezier.end.y)
 
     node = node.next
   }

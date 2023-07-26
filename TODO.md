@@ -1,4 +1,14 @@
-- [ ] Visual for algorithm in progress
+- [ ] Debug the beachline code
+  - [ ] Show the line bisectors between site of the beachline
+
 - [ ] Vet numerical algorithms for numerical stability
-- [ ] Swap out CRA for Vite
-- [ ] Buttons for starting the algorithm and locking new sites from being placed
+
+## Done
+- [x] Visual for beach segments & sites
+- [x] Swap out CRA for Vite
+- [x] Keyboard & mouse controls
+  - Mouse click: Create a new site
+  - Mouse hover: Highlight site, and its beach segments
+  - Enter: advance fortune's algorithm one step
+  - r: Reset fortune's algorithm
+

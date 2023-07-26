@@ -6,6 +6,6 @@
   padding: 0;
 }
 
-svg > *:hover {
+svg *:hover {
   cursor: pointer;
 }

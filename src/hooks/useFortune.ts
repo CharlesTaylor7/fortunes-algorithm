@@ -9,6 +9,7 @@ import useResizeAware from '@/hooks/useResizeAware'
 
 export type SiteInfoMap = Map<number, SiteInfo>
 export type SiteInfo = {
+  label: string
   highlighted: boolean
 }
 
@@ -23,8 +24,14 @@ export default function useFortune() {
     (event: MouseEvent) => {
       if (!vertexPlacementAllowed) return
       const point = getOffsetFromCurrentTarget(event)
-      console.log(point)
       const site = diagram.newSite(point)
+
+      updateSites((siteMap) =>
+        siteMap.set(site.index, {
+          label: String.fromCharCode(site.index + 65),
+          highlighted: false,
+        }),
+      )
       rerender()
     },
     [vertexPlacementAllowed],
@@ -32,7 +39,9 @@ export default function useFortune() {
 
   const onHover = useCallback(
     (siteIndex: number) => (hover: boolean) => {
-      updateSites((siteMap) => siteMap.set(siteIndex, { highlighted: hover }))
+      updateSites((siteMap) =>
+        siteMap.update(siteIndex, { label: '', highlighted: false }, (info) => ({ ...info, highlighted: hover })),
+      )
     },
     [updateSites],
   )
