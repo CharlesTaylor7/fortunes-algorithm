@@ -5,38 +5,35 @@ import intersectParabolas from './intersectParabolas'
 // https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html
 export type Event = { type: 'site', siteIndex: number } | { type: 'circle' }
 
-export function voronoiDiagram(points: Array<Point>, box: BoundingBox): Diagram {
-  let diagram = new Diagram(points, box)
+type BoundingBox = { height: number, width: number }
 
-  while (diagram.queue.length > 0) {
-    diagram.step()
-  }
-  return diagram
-}
-
-type BoundingBox = {
-  width: number
-  height: number,
-}
 // https://en.wikipedia.org/wiki/Doubly_connected_edge_list
-// DCEL
-class Diagram {
+export class Diagram {
   sites: Array<Site> = []
   sweeplineX: number = 0
   beachline?: BeachNode
   queue: PriorityQueue<Event> = new PriorityQueue()
-  boundingBox: BoundingBox 
+  boundingBox: BoundingBox = { height: 0, width: 0 }
 
-  constructor(points: Array<Point>, boundingBox: BoundingBox) {
-    this.boundingBox = boundingBox
-    for (let point of points) {
-      const site: Site = {
-        index: this.sites.length,
-        point: point
-      }
-      this.sites.push(site)
-      this.queue.push({ 'type': 'site', siteIndex: site.index }, point.x)
+  restart() {
+    const locations = this.sites.map(s => s.point)
+
+    this.sites = []
+    this.sweeplineX = 0
+    this.queue = new PriorityQueue()
+
+    for (let location of locations) {
+      this.newSite(location)
     }
+  }
+
+  newSite(point: Point) {
+    const site: Site = {
+      index: this.sites.length,
+      point: point
+    }
+    this.sites.push(site)
+    this.queue.push({ 'type': 'site', siteIndex: site.index }, point.x)
   }
 
   step() {
@@ -57,9 +54,30 @@ class Diagram {
     }
 
     let current = this.beachline
-    while (current) {
-      return 
+    while (true) {
+      const nextB = this.nextBreakpoint(current)
+      if (nextB !== undefined && site.point.y > nextB) {
+        current = current.next
+        continue
+      }
+      const prevB = this.prevBreakpoint(current)
+      if (prevB !== undefined && site.point.y < prevB) {
+        current = current.prev
+        continue
+      }
+      break
     }
+
+    // link node after current
+    const oldNext = current.next
+    current.next = node
+    node.prev = current
+
+    // link copy of current after the new node
+    const copy = new BeachNode(current.siteIndex)
+    node.next = copy
+    copy.prev = node
+    copy.next = oldNext
   }
 
   nextBreakpoint(node: BeachNode): number | undefined {
@@ -84,7 +102,6 @@ class BeachNode {
   constructor(siteIndex: number) {
     this.siteIndex = siteIndex
   }
-
 }
 
 // each site node in the beachline is the focus of a parabola
@@ -101,6 +118,7 @@ export type Site = {
   edge?: HalfEdge
 }
 
+// DCEL
 export type HalfEdge = {
   origin: Point
   twin: HalfEdge

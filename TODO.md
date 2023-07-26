@@ -1,3 +1,4 @@
 - [ ] Visual for algorithm in progress
 - [ ] Vet numerical algorithms for numerical stability
 - [ ] Swap out CRA for Vite
+- [ ] Buttons for starting the algorithm and locking new sites from being placed

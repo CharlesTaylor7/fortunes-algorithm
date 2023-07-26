@@ -1,27 +1,23 @@
 import React from 'react'
 import './Viewport.css'
 import { Parabola } from './svg/Parabola'
+import { Beachline } from './Beachline'
 import { Site } from './svg/Site'
 import { parabolaBezier } from '../utilities/parabola'
 import { Sweepline } from './svg/Sweepline'
-import useViewport from '../hooks/useViewport'
+import useFortune from '../hooks/useFortune'
 
 export const Viewport = () => {
   const {
-    sweeplineX,
+    diagram,
     onClick,
-    onClickSweepline,
-    onMouseMove,
     viewportSize,
     viewportSizeListener,
-    sweeplineDragging,
-    sites,
-  } = useViewport();
+  } = useFortune();
   return (
     <div
       className="viewport"
       onClick={onClick}
-      onMouseMove={onMouseMove}
     >
       {viewportSizeListener}
       <svg
@@ -30,28 +26,26 @@ export const Viewport = () => {
         height="100%"
       >
         <Sweepline
-          x={sweeplineX}
-          onClick={onClickSweepline}
+          x={diagram.sweeplineX}
           height={viewportSize.height}
-          selected={sweeplineDragging}
         />
-        {sites.map((site, i) =>
+        {diagram.sites.map((site, i) =>
           <Site
             key={i}
-            {...site}
+            {...site.point}
           />
         )}
-        {sites.map((focus, i) =>
+        {diagram.sites.map((site, i) =>
           <Parabola
             key={i}
             {...parabolaBezier({
-              focus,
-              directrix: sweeplineX,
+              focus: site.point,
+              directrix: diagram.sweeplineX,
               y_range: [0, viewportSize.height],
             })}
           />
         )}
-
+        <Beachline diagram={diagram} />
       </svg>
     </div>
   )
