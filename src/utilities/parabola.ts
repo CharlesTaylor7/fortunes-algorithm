@@ -73,7 +73,6 @@ export const parabolaBezier: ParabolaBezier = ({ focus, directrix, y_range }) =>
   return { start, end, control }
 }
 
-
 const parabolaCoefficients = ({ focus, directrix }: Parabola) => {
   const { x: f_x, y: f_y } = focus
   const d = directrix
@@ -87,7 +86,7 @@ const parabolaCoefficients = ({ focus, directrix }: Parabola) => {
 const solveQuadratic = (a: number, b: number, c: number): [number, number] => {
   const discriminant = b ** 2 - 4 * a * c
   if (discriminant < 0) {
-    console.error("negative discriminant", {a,b,c,discriminant})
+    console.error('negative discriminant', { a, b, c, discriminant })
     return [0, 0]
   }
   const d_sqrt = Math.sqrt(discriminant)

@@ -1,36 +1,40 @@
 import type { RefObject } from 'react'
 import { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-import type { IDiagram } from '@/utilities/types'
+import { Map } from 'immutable'
+import type { IDiagram, Site } from '@/utilities/types'
 import { diagram } from '@/utilities/fortune'
 import getOffsetFromCurrentTarget from '@/utilities/getOffsetFromCurrentTarget'
 import useAnimation from '@/hooks/useAnimation'
 import useResizeAware from '@/hooks/useResizeAware'
 
-
-function useDiagram(): [IDiagram, () => void] {
-  const [_, setDummy] = useState(0)
-  const rerender = useCallback(() => setDummy((i) => i + 1), [setDummy])
-  const diagramRef = useRef<IDiagram>(null!)
-  if (!diagramRef.current) {
-    diagramRef.current = diagram()
-  }
-
-  return [diagramRef.current, rerender]
+export type SiteInfoMap = Map<number, SiteInfo>
+export type SiteInfo = {
+  highlighted: boolean
 }
 
-export default () => {
+export default function useFortune() {
   const [diagram, rerender] = useDiagram()
+  const [siteInfo, updateSites] = useState<SiteInfoMap>(Map())
   const [viewportRef, viewportBounds] = useResizeAware()
   const [vertexPlacementAllowed, setVertexPlacement] = useState(true)
+
+  // callbacks
   const onClick = useCallback(
     (event: MouseEvent) => {
       if (!vertexPlacementAllowed) return
       const point = getOffsetFromCurrentTarget(event)
       console.log(point)
-      diagram.newSite(point)
+      const site = diagram.newSite(point)
       rerender()
     },
     [vertexPlacementAllowed],
+  )
+
+  const onHover = useCallback(
+    (siteIndex: number) => (hover: boolean) => {
+      updateSites((siteMap) => siteMap.set(siteIndex, { highlighted: hover }))
+    },
+    [updateSites],
   )
 
   // effects
@@ -61,5 +65,18 @@ export default () => {
     viewportBounds,
     viewportRef,
     onClick,
+    onHover,
+    siteInfo,
   }
+}
+
+function useDiagram(): [IDiagram, () => void] {
+  const [_, setDummy] = useState(0)
+  const rerender = useCallback(() => setDummy((i) => i + 1), [setDummy])
+  const diagramRef = useRef<IDiagram>(null!)
+  if (!diagramRef.current) {
+    diagramRef.current = diagram()
+  }
+
+  return [diagramRef.current, rerender]
 }

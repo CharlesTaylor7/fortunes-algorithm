@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import './Sweepline.css'
 
 export const Sweepline = ({ x, height, onClick, selected }) => {
   const defaultColor = 'black'

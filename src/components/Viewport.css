@@ -5,3 +5,7 @@
   background-color: white;
   padding: 0;
 }
+
+svg > *:hover {
+  cursor: pointer;
+}

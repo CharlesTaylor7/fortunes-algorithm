@@ -1,17 +1,25 @@
 import React, { useState } from 'react'
+import type { SiteInfoMap } from '@/hooks/useFortune'
+
 import { Parabola } from '@/components/svg/Parabola'
 import type { IDiagram, IBeachNode, Point, Bezier } from '@/utilities/types'
 import { parabolaBezier, parabola, intersect as intersectParabolas } from '@/utilities/parabola'
 
 type Props = {
   diagram: IDiagram
+  onHover: (siteIndex: number) => (hover: boolean) => void
+  siteInfo: SiteInfoMap
 }
 export default function Beachline(props: Props) {
-  const { diagram } = props
   return (
     <>
-      {beziers(diagram).map((props, i) => (
-        <Parabola key={i} {...props} />
+      {beachSegments(props.diagram).map((segment, i) => (
+        <Parabola
+          key={i}
+          highlight={props.siteInfo.get(segment.siteIndex)?.highlighted || false}
+          onHover={props.onHover(segment.siteIndex)}
+          {...segment.bezier}
+        />
       ))}
     </>
   )
@@ -21,28 +29,44 @@ function loc(diagram: IDiagram, node: IBeachNode): Point {
   return diagram.sites[node.siteIndex].point
 }
 
-function beziers(diagram: IDiagram): Array<Bezier> {
+type BeachSegment = {
+  bezier: Bezier
+  siteIndex: number
+}
+function beachSegments(diagram: IDiagram): Array<BeachSegment> {
   let node = diagram.beachline
-  const beziers: Array<Bezier> = []
+  const beziers: Array<BeachSegment> = []
   const directrix = diagram.sweeplineX
   while (node) {
-    const [curve, _] = parabola({ focus: loc(diagram, node), directrix})
+    const [curve, _] = parabola({ focus: loc(diagram, node), directrix })
     let start: number = 0
     let end: number = diagram.bounds.height
 
     if (node.prev) {
       start = intersectParabolas(loc(diagram, node.prev), loc(diagram, node), directrix)
-    } 
+    }
 
     if (node.next) {
       end = intersectParabolas(loc(diagram, node), loc(diagram, node.next), directrix)
-    } 
+    }
 
-    beziers.push(parabolaBezier({ 
-      y_range: [start, end],
-      focus: loc(diagram, node), 
-      directrix,
-    }))
+    if (start > end) {
+      console.error('start exceeds end', {
+        next: node.next && loc(diagram, node.next),
+        prev: node.prev && loc(diagram, node.prev),
+        focus: loc(diagram, node),
+      })
+    }
+    beziers.push({
+      siteIndex: node.siteIndex,
+      bezier: parabolaBezier({
+        y_range: [start, end],
+        focus: loc(diagram, node),
+        directrix,
+      }),
+    })
+    const b = beziers[beziers.length - 1]
+    console.log('start', b.bezier.start.y, 'end', b.bezier.end.y)
 
     node = node.next
   }

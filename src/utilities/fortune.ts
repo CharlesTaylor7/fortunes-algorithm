@@ -20,6 +20,7 @@ class Diagram implements IDiagram {
 
     this.sites = []
     this.sweeplineX = 0
+    this.beachline = undefined
     this.queue = new PriorityQueue()
 
     for (let location of locations) {
@@ -27,13 +28,14 @@ class Diagram implements IDiagram {
     }
   }
 
-  newSite(point: Point) {
+  newSite(point: Point): Site {
     const site: Site = {
       index: this.sites.length,
       point: point,
     }
     this.sites.push(site)
     this.queue.push({ type: 'site', siteIndex: site.index }, point.x)
+    return site
   }
 
   step() {
@@ -50,6 +52,7 @@ class Diagram implements IDiagram {
     this.sweeplineX = site.point.x
     if (this.beachline === undefined) {
       this.beachline = node
+      console.log(this.beachline)
       return
     }
 

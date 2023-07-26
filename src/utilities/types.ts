@@ -1,12 +1,11 @@
 import type PriorityQueue from 'flatqueue'
 
-
 export type Point = {
   x: number
   y: number
 }
-// All parabolas in this project 
-// have a vertical directrix which is the current position of 
+// All parabolas in this project
+// have a vertical directrix which is the current position of
 // the sweep line
 export type Parabola = {
   focus: Point
@@ -15,8 +14,8 @@ export type Parabola = {
 }
 
 // A quadratic Bezier curve is a way of encoding a parabolic arc.
-// The control point can be constructed by taking each tangent line 
-// of the start and end points and intersecting them. 
+// The control point can be constructed by taking each tangent line
+// of the start and end points and intersecting them.
 // This uniquely describes the arc, and is the preferred encoding for SVG paths.
 // See the mdn docs for a really illustrative animation:
 // https://developer.mozilla.org/en-US/docs/Glossary/Bezier_curve
@@ -38,10 +37,9 @@ export interface IDiagram {
   bounds: BoundingBox
 
   restart(): void
-  newSite(point: Point): void
+  newSite(point: Point): Site
   step(): void
 }
-
 
 // TODO: balance these
 export interface IBeachNode {
@@ -49,7 +47,6 @@ export interface IBeachNode {
   next?: IBeachNode
   prev?: IBeachNode
 }
-
 
 export type Site = {
   index: number
