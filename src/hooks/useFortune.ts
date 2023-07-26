@@ -1,5 +1,5 @@
 import type { RefObject } from 'react'
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import type { IDiagram } from '@/utilities/types'
 import { diagram } from '@/utilities/fortune'
 import getOffsetFromCurrentTarget from '@/utilities/getOffsetFromCurrentTarget'
@@ -34,7 +34,7 @@ export default () => {
   )
 
   // effects
-  useEffect(() => {
+  useLayoutEffect(() => {
     diagram.bounds = viewportBounds
   }, [viewportBounds])
 

@@ -4,6 +4,7 @@ import type { BoundingBox } from '@/utilities/types'
 
 export default function useResizeAware(): [Ref<HTMLElement>, BoundingBox] {
   const ref = useRef<HTMLElement>(null)
+
   const [bounds, setBounds] = useState<BoundingBox>({height: 0, width: 0})
 
   useEffect(() => {
@@ -13,10 +14,12 @@ export default function useResizeAware(): [Ref<HTMLElement>, BoundingBox] {
       return
     }
     setBounds(rectToBounds(targetEl))
-    targetEl.addEventListener('resize', () => {
-      setBounds(rectToBounds(targetEl))
+    const observer = new ResizeObserver(() => {
+        setBounds(rectToBounds(targetEl))
     })
-  }, [setBounds, ref.current])
+    observer.observe(targetEl)
+    return () => observer.unobserve(targetEl)
+  }, [setBounds])
   return [ref, bounds]
 }
 
