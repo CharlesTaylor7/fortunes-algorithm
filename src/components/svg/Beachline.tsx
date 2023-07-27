@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import type { SiteInfoMap } from '@/hooks/useFortune'
 
-import { Parabola } from '@/components/svg/Parabola'
-import type { IDiagram, IBeachNode, Point, Bezier } from '@/utilities/types'
+import Bezier from '@/components/svg/Bezier'
+import type { IDiagram, IBeachNode, Point, Bezier as BezierType} from '@/utilities/types'
 import { parabolaBezier, parabola, intersect as intersectParabolas } from '@/utilities/parabola'
 
 type Props = {
@@ -16,10 +16,10 @@ export default function Beachline(props: Props) {
       {beachSegments(props.diagram).map((segment, i) => {
         const info = props.siteInfo.get(segment.siteIndex)!
         return (
-          <Parabola
+          <Bezier
             key={i}
             highlight={info.highlighted}
-            siteLabel={info.label}
+            label={segment.label}
             onHover={props.onHover(segment.siteIndex)}
             {...segment.bezier}
           />
@@ -34,7 +34,8 @@ function loc(diagram: IDiagram, node: IBeachNode): Point {
 }
 
 type BeachSegment = {
-  bezier: Bezier
+  bezier: BezierType
+  label: string
   siteIndex: number
 }
 function beachSegments(diagram: IDiagram): Array<BeachSegment> {
@@ -67,6 +68,7 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
       */
     }
     beziers.push({
+      label: node.label,
       siteIndex: node.siteIndex,
       bezier: parabolaBezier({
         y_range: [start, end],

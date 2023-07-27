@@ -4,6 +4,7 @@
 - [ ] Vet numerical algorithms for numerical stability
 
 ## Done
+- [x] Integration with GraphViz. Can output the beachline graph with graphviz.
 - [x] Visual for beach segments & sites
 - [x] Labeled sites
 - [x] Swap out CRA for Vite

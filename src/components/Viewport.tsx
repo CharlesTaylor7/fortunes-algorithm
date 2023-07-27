@@ -1,6 +1,5 @@
 import React from 'react'
 import './Viewport.css'
-import { Parabola } from './svg/Parabola'
 import Beachline from '@/components/svg/Beachline'
 import { Site } from './svg/Site'
 import { parabolaBezier } from '../utilities/parabola'

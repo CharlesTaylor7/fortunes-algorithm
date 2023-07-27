@@ -7,16 +7,19 @@ type Props = {
   path: string
   onMouseOver: MouseEventHandler<SVGPathElement>
   onMouseOut: MouseEventHandler<SVGPathElement>
+  transform: string
 }
 
 Path.defaultProps = {
   strokeWidth: 2,
+  transform: "",
 }
 
 export function Path(props: Props) {
   const { color, path, strokeWidth } = props
   return (
     <path
+      transform={props.transform}
       onMouseOver={props.onMouseOver}
       onMouseOut={props.onMouseOut}
       fill="none"
