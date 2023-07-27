@@ -85,7 +85,10 @@ class Diagram implements IDiagram {
     const copy = this.copyBeachNode(current)
     node.next = copy
     copy.prev = node
-    copy.next = oldNext
+    if (oldNext) {
+      copy.next = oldNext
+      oldNext.prev = copy
+    }
   }
 
   newBeachNode(site: Site): IBeachNode {
@@ -136,9 +139,6 @@ class Diagram implements IDiagram {
       nodesMap.set(node.label, node)
     }
 
-    let a1 = nodesMap.get('A1')
-    console.log(a1.label, a1.siteIndex, a1.next?.label, a1.prev?.label)
-
     for (let node of nodesMap.values()) {
       await file.write(`${node.label}\n`)
       if (node.next) {
@@ -151,13 +151,12 @@ class Diagram implements IDiagram {
     }
 
     const labels = Array.from(nodesMap.keys()).join("; ")
-    console.log(labels)
     await file.write(`{ rank=same; ${labels}}\n`)
     await file.write("}\n")
     await file.close()
 
     const child_process = await import ('child_process');
-    child_process.execSync(`dot -TSvg graphs/${filename}.txt > graphs/${filename}.svg`)
+    child_process.execSync(`dot -Tsvg graphs/${filename}.txt > graphs/${filename}.svg`)
   }
 
   *iterateBeachNodes(): Generator<IBeachNode> {
