@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import type { Bezier as BezierType } from '@/utilities/types'
 import { Path } from '@/components/svg//Path'
 
@@ -9,10 +9,8 @@ type Props = BezierType & {
 }
 
 export default function Bezier(props: Props) {
-  const { start, control, end, highlight } = props
-  function onHover(hover: boolean) {
-    props.onHover(hover)
-  }
+  const { start, control, end } = props
+  const [highlight, onHover] = useState(false)
 
   return (
     <g
@@ -26,7 +24,10 @@ export default function Bezier(props: Props) {
         path={`M ${start.x} ${start.y} Q ${control.x} ${control.y} ${end.x} ${end.y}`}
         transform={`translate(${-control.x}, ${-control.y})`}
       />
-      <text>
+      <text
+        onMouseOver={() => onHover(true)}
+        onMouseOut={() => onHover(false)}
+      >
         {props.label}
       </text>
     </g>

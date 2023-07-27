@@ -7,6 +7,8 @@ import getOffsetFromCurrentTarget from '@/utilities/getOffsetFromCurrentTarget'
 import useAnimation from '@/hooks/useAnimation'
 import useResizeAware from '@/hooks/useResizeAware'
 
+export type MouseState = 'drag' | 'away'
+
 export type SiteInfoMap = Map<number, SiteInfo>
 export type SiteInfo = {
   label: string
@@ -14,12 +16,29 @@ export type SiteInfo = {
 }
 
 export default function useFortune() {
+  const [mouse, setMouse] = useState<MouseState>('away')
   const [diagram, rerender] = useDiagram()
   const [siteInfo, updateSites] = useState<SiteInfoMap>(Map())
   const [viewportRef, viewportBounds] = useResizeAware<HTMLDivElement>()
   const [vertexPlacementAllowed, setVertexPlacement] = useState(true)
 
   // callbacks
+  const onClickSweepline: MouseEventHandler = useCallback(
+    (event) => {
+      setMouse(mouse => mouse === 'drag' ? 'away' : 'drag')
+    },
+    [setMouse]
+  )
+
+  const onMouseMove: MouseEventHandler = useCallback(
+    (event) => {
+      if (mouse !== 'drag') return
+      diagram.sweeplineX = getOffsetFromCurrentTarget(event).x
+      rerender()
+    },
+    [mouse, rerender]
+  )
+
   const onClick: MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (!vertexPlacementAllowed) return
@@ -34,7 +53,7 @@ export default function useFortune() {
       )
       rerender()
     },
-    [vertexPlacementAllowed],
+    [vertexPlacementAllowed, rerender],
   )
 
   const onHover = useCallback(
@@ -57,7 +76,11 @@ export default function useFortune() {
       // next
       if (e.key === 'Enter') {
         setVertexPlacement(false)
-        diagram.step()
+        if (diagram.queue.length === 0) {
+          diagram.sweeplineX = diagram.bounds.width
+        } else {
+          diagram.step()
+        }
         rerender()
       }
       // reset
@@ -70,11 +93,13 @@ export default function useFortune() {
   }, [])
 
   return {
+    mouse,
     diagram,
-    viewportBounds,
     viewportRef,
     onClick,
     onHover,
+    onClickSweepline,
+    onMouseMove,
     siteInfo,
   }
 }

@@ -16,3 +16,7 @@ procs:
     # Mac only; sorry
     shell: yarn test --coverage && open -a 'Google Chrome' coverage/lcov-report/index.html
     autostart: false
+
+  Git:
+    shell: bash
+
