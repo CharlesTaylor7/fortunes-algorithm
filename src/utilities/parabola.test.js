@@ -37,7 +37,6 @@ describe('parabolaBezier', () => {
       y_range: [0, 366],
     })
 
-    console.log('Start', start, 'end', end, 'control', control)
     expect(start.x).toBeCloseTo(1005.54)
     expect(start.y).toBeCloseTo(0)
     expect(end.x).toBeCloseTo(40.63)

@@ -10,6 +10,7 @@ procs:
 
   Prettier:
     shell: find src/ | entr -s 'yarn format'
+    autostart: false
 
   Test Coverage:
     # Mac only; sorry
