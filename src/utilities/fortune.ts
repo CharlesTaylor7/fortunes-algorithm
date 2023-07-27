@@ -16,6 +16,9 @@ class Diagram implements IDiagram {
   queue: PriorityQueue<Event> = new PriorityQueue()
   bounds: BoundingBox = { height: 0, width: 0 }
 
+  // For labeling beach nodes, we need to count the number of beach segments for each site
+  beachNodeCounts: Array<number> = []
+
   restart() {
     const locations = this.sites.map((s) => s.point)
 
@@ -34,24 +37,27 @@ class Diagram implements IDiagram {
     const label = labelArg || String.fromCharCode(index + 65)
     const site: Site = { label, point, index }
     this.sites.push(site)
-    this.queue.push({ type: 'site', siteIndex: site.index }, point.x)
+    this.queue.push({ type: 'site', site}, point.x)
     return site
   }
 
   step() {
     const event = this.queue.pop()
     if (event === undefined) return
+    if (this.beachNodeCounts.length === 0) {
+      this.beachNodeCounts = Array.from(this.sites, () => 0)
+    }
     if (event.type === 'site') {
-      this.insertBeachNode(event.siteIndex)
+      this.insertBeachNode(event.site)
     }
   }
 
-  insertBeachNode(siteIndex: number) {
-    const node = new BeachNode(siteIndex)
-    const site = this.sites[siteIndex]
+  insertBeachNode(site: Site) {
+    const node = this.newBeachNode(site)
     this.sweeplineX = site.point.x
     if (this.beachline === undefined) {
       this.beachline = node
+      this.beachNodeCounts[site.index]++
       return
     }
 
@@ -76,10 +82,20 @@ class Diagram implements IDiagram {
     node.prev = current
 
     // link copy of current after the new node
-    const copy = new BeachNode(current.siteIndex)
+    const copy = this.copyBeachNode(current)
     node.next = copy
     copy.prev = node
     copy.next = oldNext
+  }
+
+  newBeachNode(site: Site): IBeachNode {
+    const count = this.beachNodeCounts[site.index]++
+    return new BeachNode(site.index,`${site.label}1`)
+  }
+
+  copyBeachNode(node: IBeachNode) {
+    const count = this.beachNodeCounts[node.siteIndex]++
+    return new BeachNode(node.siteIndex, `${node.label[0]}${count}`)
   }
 
   nextBreakpoint(node: IBeachNode): number | undefined {
@@ -103,9 +119,45 @@ class Diagram implements IDiagram {
   }
 
   // nodejs only
-  async toGraphiz() {
-    let fs = await import('node:fs') 
+  // dump graphiz of the beachline to debug the issues
+  async toGraphviz(filename: string) {
+    const fs = await import('node:fs/promises') 
+    const file = await fs.open(`graphs/${filename}.txt`, 'w')
+    await file.write("digraph {\n")
 
+    let nodes: Array<IBeachNode> = Array.from(this.iterateBeachNodes())
+    let nodesBackwards = Array.from(backwards(nodes[nodes.length-1]))
+    let nodesMap: Map<string, IBeachNode> = new Map()
+
+    for (let node of nodes) {
+      nodesMap.set(node.label, node)
+    }
+    for (let node of nodesBackwards) {
+      nodesMap.set(node.label, node)
+    }
+
+    let a1 = nodesMap.get('A1')
+    console.log(a1.label, a1.siteIndex, a1.next?.label, a1.prev?.label)
+
+    for (let node of nodesMap.values()) {
+      await file.write(`${node.label}\n`)
+      if (node.next) {
+        await file.write(`${node.label} -> ${node.next.label} [color=green;label=next]\n`)
+      }
+
+      if (node.prev) {
+        await file.write(`${node.label} -> ${node.prev.label} [color=blue;label=prev]\n`)
+      }
+    }
+
+    const labels = Array.from(nodesMap.keys()).join("; ")
+    console.log(labels)
+    await file.write(`{ rank=same; ${labels}}\n`)
+    await file.write("}\n")
+    await file.close()
+
+    const child_process = await import ('child_process');
+    child_process.execSync(`dot -TSvg graphs/${filename}.txt > graphs/${filename}.svg`)
   }
 
   *iterateBeachNodes(): Generator<IBeachNode> {
@@ -117,19 +169,28 @@ class Diagram implements IDiagram {
   }
 }
 
+function beachLabels(diagram: Diagram): Array<string> {
+  return Array.from(diagram.iterateBeachNodes(), (node) => diagram.sites[node.siteIndex].label)
+}
+
+function* backwards(node: IBeachNode) {
+  let current: IBeachNode | undefined = node
+  while (current) {
+    yield current
+    current = current.prev
+  }
+}
+
+
 // TODO: balance these
 class BeachNode implements IBeachNode {
+  label: string
   siteIndex: number
   next?: IBeachNode
   prev?: IBeachNode
 
-  constructor(siteIndex: number) {
+  constructor(siteIndex: number, label: string) {
     this.siteIndex = siteIndex
-  }
-
-  toJSON(): any {
-    console.log("hello from toJSON")
-    const { siteIndex } = this
-    return { siteIndex }
+    this.label = label
   }
 }

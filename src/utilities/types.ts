@@ -4,6 +4,7 @@ export type Point = {
   x: number
   y: number
 }
+
 // All parabolas in this project
 // have a vertical directrix which is the current position of
 // the sweep line
@@ -25,7 +26,7 @@ export type Bezier = {
   control: Point
 }
 
-export type Event = { type: 'site'; siteIndex: number } | { type: 'circle' }
+export type Event = { type: 'site'; site: Site } | { type: 'circle' }
 
 export type BoundingBox = { height: number; width: number }
 
@@ -43,6 +44,7 @@ export interface IDiagram {
 
 // TODO: balance these
 export interface IBeachNode {
+  label: string
   siteIndex: number
   next?: IBeachNode
   prev?: IBeachNode
