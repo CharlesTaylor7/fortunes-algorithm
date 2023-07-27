@@ -25,9 +25,9 @@ export default function useFortune() {
   // callbacks
   const onClickSweepline: MouseEventHandler = useCallback(
     (event) => {
-      setMouse(mouse => mouse === 'drag' ? 'away' : 'drag')
+      setMouse((mouse) => (mouse === 'drag' ? 'away' : 'drag'))
     },
-    [setMouse]
+    [setMouse],
   )
 
   const onMouseMove: MouseEventHandler = useCallback(
@@ -36,7 +36,7 @@ export default function useFortune() {
       diagram.sweeplineX = getOffsetFromCurrentTarget(event).x
       rerender()
     },
-    [mouse, rerender]
+    [mouse, rerender],
   )
 
   const onClick: MouseEventHandler<HTMLDivElement> = useCallback(

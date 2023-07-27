@@ -9,7 +9,7 @@ procs:
     shell: yarn dev
 
   Prettier:
-    shell: find src/ | entr -s 'yarn format'
+    shell: yarn format
     autostart: false
 
   Test Coverage:

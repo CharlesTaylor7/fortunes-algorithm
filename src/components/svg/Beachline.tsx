@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import type { SiteInfoMap } from '@/hooks/useFortune'
 
 import Bezier from '@/components/svg/Bezier'
-import type { IDiagram, IBeachNode, Point, Bezier as BezierType} from '@/utilities/types'
+import type { IDiagram, IBeachNode, Point, Bezier as BezierType } from '@/utilities/types'
 import { parabolaBezier, parabola, intersect as intersectParabolas } from '@/utilities/parabola'
 
 type Props = {
@@ -38,6 +38,7 @@ type BeachSegment = {
   label: string
   siteIndex: number
 }
+
 function beachSegments(diagram: IDiagram): Array<BeachSegment> {
   let node = diagram.beachline
   const beziers: Array<BeachSegment> = []
@@ -48,11 +49,19 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
     let end: number = diagram.bounds.height
 
     if (node.prev) {
-      start = intersectParabolas(loc(diagram, node.prev), loc(diagram, node), directrix)
+      start = intersectParabolas({
+        focus1: loc(diagram, node.prev),
+        focus2: loc(diagram, node),
+        directrix,
+      })[0].y
     }
 
     if (node.next) {
-      end = intersectParabolas(loc(diagram, node), loc(diagram, node.next), directrix)
+      end = intersectParabolas({
+        focus1: loc(diagram, node),
+        focus2: loc(diagram, node.next),
+        directrix,
+      })[0].y
     }
 
     if (start > end) {

@@ -95,7 +95,12 @@ const solveQuadratic = (a: number, b: number, c: number): [number, number] => {
   return [(-b + d_sqrt) / (2 * a), (-b - d_sqrt) / (2 * a)]
 }
 
-export function intersect(focus1: Point, focus2: Point, directrix: number): number {
+type IntersectArgs = {
+  focus1: Point
+  focus2: Point
+  directrix: number
+}
+export function intersect({ focus1, focus2, directrix }: IntersectArgs): [Point, Point] {
   const [c, b, a] = parabolaCoefficients({ focus: focus2, directrix })
   const { b: p, m } = bisector(focus1, focus2)
 
@@ -106,5 +111,8 @@ export function intersect(focus1: Point, focus2: Point, directrix: number): numb
   const x_1 = s * (y_1 - p.y) + p.x
   const x_2 = s * (y_2 - p.y) + p.x
 
-  return x_1 > x_2 ? y_1 : y_2
+  return [
+    { x: x_1, y: y_1 },
+    { x: x_2, y: y_2 },
+  ]
 }

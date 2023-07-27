@@ -37,7 +37,7 @@ class Diagram implements IDiagram {
     const label = labelArg || String.fromCharCode(index + 65)
     const site: Site = { label, point, index }
     this.sites.push(site)
-    this.queue.push({ type: 'site', site}, point.x)
+    this.queue.push({ type: 'site', site }, point.x)
     return site
   }
 
@@ -93,7 +93,7 @@ class Diagram implements IDiagram {
 
   newBeachNode(site: Site): IBeachNode {
     const count = this.beachNodeCounts[site.index]++
-    return new BeachNode(site.index,`${site.label}1`)
+    return new BeachNode(site.index, `${site.label}1`)
   }
 
   copyBeachNode(node: IBeachNode) {
@@ -103,33 +103,33 @@ class Diagram implements IDiagram {
 
   nextBreakpoint(node: IBeachNode): number | undefined {
     if (node.next) {
-      return intersectParabolas(
-        this.sites[node.siteIndex].point,
-        this.sites[node.next.siteIndex].point,
-        this.sweeplineX,
-      )
+      return intersectParabolas({
+        focus1: this.sites[node.siteIndex].point,
+        focus2: this.sites[node.next.siteIndex].point,
+        directrix: this.sweeplineX,
+      })[0].y
     }
   }
 
   prevBreakpoint(node: IBeachNode): number | undefined {
     if (node.prev) {
-      return intersectParabolas(
-        this.sites[node.prev.siteIndex].point,
-        this.sites[node.siteIndex].point,
-        this.sweeplineX,
-      )
+      return intersectParabolas({
+        focus1: this.sites[node.prev.siteIndex].point,
+        focus2: this.sites[node.siteIndex].point,
+        directrix: this.sweeplineX,
+      })[0].y
     }
   }
 
   // nodejs only
   // dump graphiz of the beachline to debug the issues
   async toGraphviz(filename: string) {
-    const fs = await import('node:fs/promises') 
+    const fs = await import('node:fs/promises')
     const file = await fs.open(`graphs/${filename}.txt`, 'w')
-    await file.write("digraph {\n")
+    await file.write('digraph {\n')
 
     let nodes: Array<IBeachNode> = Array.from(this.iterateBeachNodes())
-    let nodesBackwards = Array.from(backwards(nodes[nodes.length-1]))
+    let nodesBackwards = Array.from(backwards(nodes[nodes.length - 1]))
     let nodesMap: Map<string, IBeachNode> = new Map()
 
     for (let node of nodes) {
@@ -150,12 +150,12 @@ class Diagram implements IDiagram {
       }
     }
 
-    const labels = Array.from(nodesMap.keys()).join("; ")
+    const labels = Array.from(nodesMap.keys()).join('; ')
     await file.write(`{ rank=same; ${labels}}\n`)
-    await file.write("}\n")
+    await file.write('}\n')
     await file.close()
 
-    const child_process = await import ('child_process');
+    const child_process = await import('child_process')
     child_process.execSync(`dot -Tsvg graphs/${filename}.txt > graphs/${filename}.svg`)
   }
 
@@ -179,7 +179,6 @@ function* backwards(node: IBeachNode) {
     current = current.prev
   }
 }
-
 
 // TODO: balance these
 class BeachNode implements IBeachNode {

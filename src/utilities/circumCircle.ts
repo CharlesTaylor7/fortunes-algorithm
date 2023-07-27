@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 export const bisector = ({ x: x1, y: y1 }, { x: x2, y: y2 }) => ({
   b: { x: (x1 + x2) / 2, y: (y1 + y2) / 2 },
   m: { x: y1 - y2, y: x2 - x1 },

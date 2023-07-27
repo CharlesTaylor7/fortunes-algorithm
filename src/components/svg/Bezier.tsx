@@ -13,9 +13,7 @@ export default function Bezier(props: Props) {
   const [highlight, onHover] = useState(false)
 
   return (
-    <g
-      transform={`translate(${control.x}, ${control.y})`}
-    >
+    <g transform={`translate(${control.x}, ${control.y})`}>
       <Path
         strokeWidth={highlight ? 4 : 2}
         onMouseOver={() => onHover(true)}
@@ -24,10 +22,7 @@ export default function Bezier(props: Props) {
         path={`M ${start.x} ${start.y} Q ${control.x} ${control.y} ${end.x} ${end.y}`}
         transform={`translate(${-control.x}, ${-control.y})`}
       />
-      <text
-        onMouseOver={() => onHover(true)}
-        onMouseOut={() => onHover(false)}
-      >
+      <text onMouseOver={() => onHover(true)} onMouseOut={() => onHover(false)}>
         {props.label}
       </text>
     </g>

@@ -8,17 +8,15 @@ import useFortune from '../hooks/useFortune'
 
 export function Viewport() {
   const hook = useFortune()
-  const { diagram, onClick, viewportRef, siteInfo, onHover } = hook;
+  const { diagram, onClick, viewportRef, siteInfo, onHover } = hook
   return (
-    <div className="viewport" ref={viewportRef} 
-      onClick={onClick}
-      onMouseMove={hook.onMouseMove}
-    >
+    <div className="viewport" ref={viewportRef} onClick={onClick} onMouseMove={hook.onMouseMove}>
       <svg className="svg" width="100%" height="100%">
-        <Sweepline 
+        <Sweepline
           mouse={hook.mouse}
           onClick={hook.onClickSweepline}
-          x={diagram.sweeplineX} height={diagram.bounds.height} 
+          x={diagram.sweeplineX}
+          height={diagram.bounds.height}
         />
         {diagram.sites.map((site, i) => {
           const info = siteInfo.get(site.index)!

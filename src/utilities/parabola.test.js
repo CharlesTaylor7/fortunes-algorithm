@@ -1,27 +1,35 @@
-import { parabola, parabolaBezier } from './parabola'
+import { parabola, parabolaBezier, intersect } from './parabola'
 
-test('vertex should have same height as focus', () => {
-  const [f, _] = parabola({ focus: { x: 4, y: 10 }, directrix: 0 })
-  expect(f(10)).toEqual(2)
-})
-
-test('should have symmetry about the focus', () => {
-  const [f, _] = parabola({ focus: { x: 4, y: 10 }, directrix: 0 })
-
-  for (let i = 1; i <= 10; i++) {
-    expect(f(10 + i)).toEqual(f(10 - i))
-  }
-})
-
-test('', () => {
-  const [f, _] = parabola({
-    focus: {
-      x: 102.265625,
-      y: 246,
-    },
-    directrix: 0,
+describe('parabola', () => {
+  test('vertex should have same height as focus', () => {
+    const [f, _] = parabola({ focus: { x: 4, y: 10 }, directrix: 0 })
+    expect(f(10)).toEqual(2)
   })
-  expect(f(246)).toEqual(51.1328125)
+
+  test('should have symmetry about the focus', () => {
+    const [f, _] = parabola({ focus: { x: 4, y: 10 }, directrix: 0 })
+
+    for (let i = 1; i <= 10; i++) {
+      expect(f(10 + i)).toEqual(f(10 - i))
+    }
+  })
+
+  test('point', () => {
+    const [f, _] = parabola({
+      focus: {
+        x: 102.265625,
+        y: 246,
+      },
+      directrix: 0,
+    })
+    expect(f(246)).toEqual(51.1328125)
+  })
+})
+
+describe('intersect', () => {
+  test('parallel parabolas', () => {
+    expect(intersect({ focus1: { x: 2, y: 0 }, focus2: { x: 2, y: 5 }, directrix: 5 })).toEqual([])
+  })
 })
 
 describe('parabolaBezier', () => {

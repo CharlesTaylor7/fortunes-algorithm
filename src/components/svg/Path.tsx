@@ -12,7 +12,7 @@ type Props = {
 
 Path.defaultProps = {
   strokeWidth: 2,
-  transform: "",
+  transform: '',
 }
 
 export function Path(props: Props) {
