@@ -1,8 +1,8 @@
-import type { RefObject } from 'react'
+import type { RefObject, MouseEventHandler } from 'react'
 import { useState, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { Map } from 'immutable'
 import type { IDiagram, Site } from '@/utilities/types'
-import { diagram } from '@/utilities/fortune'
+import { Diagram } from '@/utilities/fortune'
 import getOffsetFromCurrentTarget from '@/utilities/getOffsetFromCurrentTarget'
 import useAnimation from '@/hooks/useAnimation'
 import useResizeAware from '@/hooks/useResizeAware'
@@ -16,19 +16,19 @@ export type SiteInfo = {
 export default function useFortune() {
   const [diagram, rerender] = useDiagram()
   const [siteInfo, updateSites] = useState<SiteInfoMap>(Map())
-  const [viewportRef, viewportBounds] = useResizeAware()
+  const [viewportRef, viewportBounds] = useResizeAware<HTMLDivElement>()
   const [vertexPlacementAllowed, setVertexPlacement] = useState(true)
 
   // callbacks
-  const onClick = useCallback(
-    (event: MouseEvent) => {
+  const onClick: MouseEventHandler<HTMLDivElement> = useCallback(
+    (event) => {
       if (!vertexPlacementAllowed) return
+
       const point = getOffsetFromCurrentTarget(event)
       const site = diagram.newSite(point)
-
       updateSites((siteMap) =>
         siteMap.set(site.index, {
-          label: String.fromCharCode(site.index + 65),
+          label: site.label,
           highlighted: false,
         }),
       )
@@ -84,7 +84,7 @@ function useDiagram(): [IDiagram, () => void] {
   const rerender = useCallback(() => setDummy((i) => i + 1), [setDummy])
   const diagramRef = useRef<IDiagram>(null!)
   if (!diagramRef.current) {
-    diagramRef.current = diagram()
+    diagramRef.current = Diagram()
   }
 
   return [diagramRef.current, rerender]

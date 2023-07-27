@@ -2,7 +2,8 @@ import PriorityQueue from 'flatqueue'
 import { intersect as intersectParabolas } from '@/utilities/parabola'
 import type { IDiagram, IBeachNode, Site, HalfEdge, BoundingBox, Point, Event } from '@/utilities/types'
 
-export function diagram(): IDiagram {
+export { diagram as Diagram }
+function diagram(): Diagram {
   return new Diagram()
 }
 
@@ -11,7 +12,7 @@ export function diagram(): IDiagram {
 class Diagram implements IDiagram {
   sites: Array<Site> = []
   sweeplineX: number = 0
-  beachline?: BeachNode
+  beachline?: IBeachNode
   queue: PriorityQueue<Event> = new PriorityQueue()
   bounds: BoundingBox = { height: 0, width: 0 }
 
@@ -28,11 +29,10 @@ class Diagram implements IDiagram {
     }
   }
 
-  newSite(point: Point): Site {
-    const site: Site = {
-      index: this.sites.length,
-      point: point,
-    }
+  newSite(point: Point, labelArg?: string): Site {
+    const index = this.sites.length
+    const label = labelArg || String.fromCharCode(index + 65)
+    const site: Site = { label, point, index }
     this.sites.push(site)
     this.queue.push({ type: 'site', siteIndex: site.index }, point.x)
     return site
@@ -52,7 +52,6 @@ class Diagram implements IDiagram {
     this.sweeplineX = site.point.x
     if (this.beachline === undefined) {
       this.beachline = node
-      console.log(this.beachline)
       return
     }
 
@@ -83,7 +82,7 @@ class Diagram implements IDiagram {
     copy.next = oldNext
   }
 
-  nextBreakpoint(node: BeachNode): number | undefined {
+  nextBreakpoint(node: IBeachNode): number | undefined {
     if (node.next) {
       return intersectParabolas(
         this.sites[node.siteIndex].point,
@@ -93,13 +92,27 @@ class Diagram implements IDiagram {
     }
   }
 
-  prevBreakpoint(node: BeachNode): number | undefined {
+  prevBreakpoint(node: IBeachNode): number | undefined {
     if (node.prev) {
       return intersectParabolas(
         this.sites[node.prev.siteIndex].point,
         this.sites[node.siteIndex].point,
         this.sweeplineX,
       )
+    }
+  }
+
+  // nodejs only
+  async toGraphiz() {
+    let fs = await import('node:fs') 
+
+  }
+
+  *iterateBeachNodes(): Generator<IBeachNode> {
+    let current = this.beachline
+    while (current) {
+      yield current
+      current = current.next
     }
   }
 }
@@ -112,5 +125,11 @@ class BeachNode implements IBeachNode {
 
   constructor(siteIndex: number) {
     this.siteIndex = siteIndex
+  }
+
+  toJSON(): any {
+    console.log("hello from toJSON")
+    const { siteIndex } = this
+    return { siteIndex }
   }
 }

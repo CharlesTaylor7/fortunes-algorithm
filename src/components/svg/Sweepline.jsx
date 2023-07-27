@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 
-export const Sweepline = ({ x, height, onClick, selected }) => {
+Sweepline.defaultProps = {
+  onClick: () => {},
+  selected: undefined
+}
+export function Sweepline ({ x, height, onClick, selected }) {
   const defaultColor = 'black'
   const highlighted = 'yellow'
 

@@ -37,7 +37,7 @@ export interface IDiagram {
   bounds: BoundingBox
 
   restart(): void
-  newSite(point: Point): Site
+  newSite(point: Point, label?: string): Site
   step(): void
 }
 
@@ -49,6 +49,7 @@ export interface IBeachNode {
 }
 
 export type Site = {
+  label: string
   index: number
   point: Point
   edge?: HalfEdge

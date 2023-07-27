@@ -1,8 +1,8 @@
 import { Ref, useState, useCallback, useEffect, useRef } from 'react'
 import type { BoundingBox } from '@/utilities/types'
 
-export default function useResizeAware(): [Ref<HTMLElement>, BoundingBox] {
-  const ref = useRef<HTMLElement>(null)
+export default function useResizeAware<T extends HTMLElement>(): [Ref<T>, BoundingBox] {
+  const ref = useRef<T>(null)
 
   const [bounds, setBounds] = useState<BoundingBox>({ height: 0, width: 0 })
 
