@@ -53,6 +53,7 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
         focus1: loc(diagram, node.prev),
         focus2: loc(diagram, node),
         directrix,
+        domain: [0, diagram.bounds.height],
       })[0].y
     }
 
@@ -61,6 +62,7 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
         focus1: loc(diagram, node),
         focus2: loc(diagram, node.next),
         directrix,
+        domain: [0, diagram.bounds.height],
       })[0].y
     }
 

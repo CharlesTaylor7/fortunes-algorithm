@@ -107,6 +107,7 @@ class Diagram implements IDiagram {
         focus1: this.sites[node.siteIndex].point,
         focus2: this.sites[node.next.siteIndex].point,
         directrix: this.sweeplineX,
+        domain: [0, this.bounds.height],
       })[0].y
     }
   }
@@ -117,6 +118,7 @@ class Diagram implements IDiagram {
         focus1: this.sites[node.prev.siteIndex].point,
         focus2: this.sites[node.siteIndex].point,
         directrix: this.sweeplineX,
+        domain: [0, this.bounds.height],
       })[0].y
     }
   }

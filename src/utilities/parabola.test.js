@@ -27,8 +27,40 @@ describe('parabola', () => {
 })
 
 describe('intersect', () => {
-  test('parallel parabolas', () => {
-    expect(intersect({ focus1: { x: 2, y: 0 }, focus2: { x: 2, y: 5 }, directrix: 5 })).toEqual([])
+  test('focuses have the same y coordinate', () => {
+    const points = intersect({
+      focus1: { x: 0, y: 4 },
+      focus2: { x: 2, y: 4 },
+      directrix: 5,
+      domain: [0, 10],
+    })
+    expect(points[0]).toBeWithin(1e-3, {
+      x: 0.9832282068558234,
+      y: 7.889188661993826,
+    })
+  })
+
+  test('focuses have the same x coordinate', () => {
+    const points = intersect({
+      focus1: { x: 2, y: 2 },
+      focus2: { x: 2, y: 4 },
+      directrix: 5,
+      domain: [0, 4],
+    })
+    expect(points[0]).toBeWithin(0.001, { x: 3.3333333333333335, y: 3 })
+  })
+
+  test('general case', () => {
+    const points = intersect({
+      focus1: { x: 2, y: 0 },
+      focus2: { x: 4, y: 4 },
+      directrix: 5,
+      domain: [0, 4],
+    })
+    expect(points[0]).toBeWithin(0.001, {
+      x: 2.745966692414834,
+      y: 2.127016653792583,
+    })
   })
 })
 
