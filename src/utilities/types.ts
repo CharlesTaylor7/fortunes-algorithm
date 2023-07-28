@@ -42,6 +42,8 @@ export interface IDiagram {
   step(): void
   prevBreakpoint(node: IBeachNode): number | undefined
   nextBreakpoint(node: IBeachNode): number | undefined
+
+  toGraphviz(fileName?: string): Promise<void>
 }
 
 // TODO: balance these

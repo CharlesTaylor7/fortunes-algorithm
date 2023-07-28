@@ -71,7 +71,7 @@ export default function useFortune() {
   }, [viewportBounds])
 
   useEffect(() => {
-    document.onkeydown = (e) => {
+    document.onkeydown = async (e) => {
       console.log('key down', e.key)
       // next
       if (e.key === 'Enter') {
@@ -80,6 +80,7 @@ export default function useFortune() {
           diagram.sweeplineX = diagram.bounds.width
         } else {
           diagram.step()
+          await diagram.toGraphviz()
         }
         rerender()
       }

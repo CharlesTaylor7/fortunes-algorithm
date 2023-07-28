@@ -1,10 +1,11 @@
 - [ ] Debug the beachline code
-  - [ ] Show the line bisectors between site of the beachline
+  - [ ]
 - [ ] Use a balancing red-black tree for the beachline
 - [ ] Update Graphviz to show red-black trees
 - [ ] Vet numerical algorithms for numerical stability
 
 ## Done
+- [x] Graphviz output for dev site by way of vite-express, in addition to test suite
 - [x] Integration with GraphViz. Can output the beachline graph with graphviz.
 - [x] Visual for beach segments & sites
 - [x] Labeled sites

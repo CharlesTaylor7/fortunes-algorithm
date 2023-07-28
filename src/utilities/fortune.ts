@@ -18,6 +18,7 @@ class Diagram implements IDiagram {
 
   // For labeling beach nodes, we need to count the number of beach segments for each site
   beachNodeCounts: Array<number> = []
+  stepCount: number = 0
 
   restart() {
     const locations = this.sites.map((s) => s.point)
@@ -27,6 +28,7 @@ class Diagram implements IDiagram {
     this.beachline = undefined
     this.queue = new PriorityQueue()
     this.beachNodeCounts = []
+    this.stepCount = 0
 
     for (let location of locations) {
       this.newSite(location)
@@ -51,7 +53,7 @@ class Diagram implements IDiagram {
     if (event.type === 'site') {
       this.insertBeachNode(event.site)
     }
-    this.toGraphviz("step") 
+    this.stepCount++
   }
 
   insertBeachNode(site: Site) {
@@ -110,6 +112,7 @@ class Diagram implements IDiagram {
         focus2: this.sites[node.next.siteIndex].point,
         directrix: this.sweeplineX,
       })
+      console.log("nextBreakpoint", points)
 
       // return largest point by y coordinate
       const y = points[points.length - 1].y
@@ -125,9 +128,19 @@ class Diagram implements IDiagram {
         directrix: this.sweeplineX,
       })
 
+      console.log("prevBreakpoint", points)
+
       // return smallest point by y coordinate
       const y = points[0].y
       return Math.max(y, 0)
+    }
+  }
+
+  *iterateBeachNodes(): Generator<IBeachNode> {
+    let current = this.beachline
+    while (current) {
+      yield current
+      current = current.next
     }
   }
 
@@ -163,21 +176,31 @@ class Diagram implements IDiagram {
     return content.join("\n")
   }
 
-  // nodejs only
   // dump graphiz of the beachline to debug the issues
-  async toGraphviz(filename: string) {
-    const fs = await import('node:fs/promises')
-    const file = await fs.open(`graphs/${filename}.txt`, 'w')
-    await file.write(this.toGraphvizContent())
-    const child_process = await import('node:child_process')
-    child_process.execSync(`dot -Tsvg graphs/${filename}.txt > graphs/${filename}.svg`)
-  }
+  async toGraphviz(name?: string) {
+    const fileName = name || `step${this.stepCount}`
 
-  *iterateBeachNodes(): Generator<IBeachNode> {
-    let current = this.beachline
-    while (current) {
-      yield current
-      current = current.next
+    // https://github.com/jsdom/jsdom/issues/1537#issuecomment-229405327
+    // detect jsdom for test cases
+    if (navigator.userAgent.includes("Node.js") || navigator.userAgent.includes("jsdom")) {
+      const fs = await import('node:fs/promises')
+      const file = await fs.open(`graphs/${fileName}.txt`, 'w')
+      await file.write(this.toGraphvizContent())
+      const child_process = await import('node:child_process')
+      child_process.execSync(`dot -Tsvg graphs/${fileName}.txt > graphs/${fileName}.svg`)
+    }
+    // otherwise running in browser, hit the dev express server
+    else {
+      const response = await fetch("./graphviz", {
+        method: "POST", 
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileName,
+          content: this.toGraphvizContent(),
+        }), 
+      });
     }
   }
 }

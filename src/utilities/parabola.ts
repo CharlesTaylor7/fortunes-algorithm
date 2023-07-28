@@ -95,7 +95,7 @@ const solveQuadratic = (a: number, b: number, c: number): number[] => {
     console.error('negative discriminant', { a, b, c, discriminant })
   }
   const d_sqrt = Math.sqrt(discriminant)
-  const roots = [(-b - d_sqrt) / (2 * a), (-b + d_sqrt) / (2 * a)]
+  const roots = [(-b - d_sqrt) / (2 * a), (-b + d_sqrt) / (2 * a)].sort()
   if (Number.isFinite(roots[0]) && Number.isFinite(roots[1])) {
     return roots
   }

@@ -12,7 +12,7 @@ type Props = {
   siteInfo: SiteInfoMap
 }
 
-export default function Debug(props: Props) {
+function Debug(props: Props) {
   function bezierPoints(site: any) {
     return parabolaBezier({
       focus: site.point,
@@ -25,10 +25,7 @@ export default function Debug(props: Props) {
       {props.diagram.sites.map((site, i) => (
         <Bezier key={`bezier-${i}`} label={site.label} {...bezierPoints(site)} />
       ))}
-      {breakpoints(props.diagram).map((b, i) => (
-        //<Site key={i} {...b} />
-        <line data-label={b.label} stroke="black" key={i} x1="0" x2={props.diagram.sweeplineX} y1={b.y} y2={b.y} />
-      ))}
+      
     </>
   )
 }
@@ -48,6 +45,10 @@ function Beachline(props: Props) {
           />
         )
       })}
+      {breakpoints(props.diagram).map((b, i) => (
+        //<Site key={i} {...b} />
+        <line key={`break-${i}`} data-label={b.label} stroke="black" key={i} x1="0" x2={props.diagram.sweeplineX} y1={b.y} y2={b.y} />
+      ))}
     </>
   )
 }
@@ -95,6 +96,7 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
   while (node) {
     const [curve, _] = parabola({ focus: loc(diagram, node), directrix })
 
+    console.log(node.label)
     let start: number = diagram.prevBreakpoint(node) || 0
     let end: number = diagram.nextBreakpoint(node) || diagram.bounds.height
 
@@ -123,3 +125,4 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
   }
   return beziers
 }
+export default Beachline
