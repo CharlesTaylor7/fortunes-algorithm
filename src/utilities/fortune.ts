@@ -26,6 +26,7 @@ class Diagram implements IDiagram {
     this.sweeplineX = 0
     this.beachline = undefined
     this.queue = new PriorityQueue()
+    this.beachNodeCounts = []
 
     for (let location of locations) {
       this.newSite(location)

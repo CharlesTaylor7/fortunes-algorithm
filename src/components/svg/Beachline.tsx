@@ -53,6 +53,7 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
       console.error(
         'start exceeds end',
          {
+           start, end,
           next: node.next && loc(diagram, node.next),
           prev: node.prev && loc(diagram, node.prev),
           focus: loc(diagram, node),
