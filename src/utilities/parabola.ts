@@ -106,10 +106,9 @@ type IntersectArgs = {
   focus1: Point
   focus2: Point
   directrix: number
-  domain: [number, number]
 }
 
-export function intersect({ focus1, focus2, directrix, domain }: IntersectArgs): Point[] {
+export function intersect({ focus1, focus2, directrix }: IntersectArgs): Point[] {
   if (focus1.x > directrix || focus2.x > directrix) {
     throw new Error('expected directrix to exceed focii')
   }
@@ -128,43 +127,3 @@ function average(focus1: Point, focus2: Point): Point {
   return { x: (focus1.x + focus2.x) / 2, y: (focus1.y + focus2.y) / 2 }
 }
 
-export function newton_intersect({ focus1, focus2, directrix, domain }: IntersectArgs): Point[] {
-  if (focus1.x > directrix || focus2.x > directrix) {
-    throw new Error('expected directrix to exceed focii')
-  }
-  const [f_A, f_A_prime] = parabola({ focus: focus1, directrix })
-  const [f_B, f_B_prime] = parabola({ focus: focus2, directrix })
-
-  // perform newton's method to intersect
-  const focus = focus1.x > focus2.x ? focus1 : focus2
-
-  const [start, end] = domain
-  return [runNewton([start, focus.y]), runNewton([focus.y, end])].filter((point) => point) as Point[]
-
-  function runNewton(domain: [number, number]): Point | undefined {
-    const [start, end] = domain
-    // guess a random value that's within the domain
-    let guess = start + Math.random() * (end - start)
-
-    let prev = Number.NEGATIVE_INFINITY
-    while (guess - prev > 1e-10) {
-      const newGuess = guess - (f_A(guess) - f_B(guess)) / (f_A_prime(guess) - f_B_prime(guess))
-      if (Number.isNaN(newGuess)) {
-        // got unlucky?
-        return
-        // return runNewton(domain)
-      }
-
-      prev = guess
-      guess = newGuess
-    }
-
-    const y = guess
-    if (y < start || y > end) return
-
-    const x = (f_A(guess) + f_B(guess)) / 2
-    if (x < 0 || x > directrix) return
-
-    return { x, y }
-  }
-}

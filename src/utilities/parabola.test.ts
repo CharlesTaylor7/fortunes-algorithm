@@ -53,7 +53,6 @@ describe('intersect', () => {
       focus1: { x: 0, y: 4 },
       focus2: { x: 2, y: 4 },
       directrix: 5,
-      domain: [0, 10],
     })
     expect(points).toHaveLength(2)
     expect(points[0]).toBeWithin(1e-2, {
@@ -71,7 +70,6 @@ describe('intersect', () => {
       focus1: { x: 2, y: 2 },
       focus2: { x: 2, y: 4 },
       directrix: 5,
-      domain: [0, 4],
     })
     expect(points).toHaveLength(1)
     expect(points[0]).toBeWithin(1e-2, { x: 3.3333333333333335, y: 3 })
@@ -82,7 +80,6 @@ describe('intersect', () => {
       focus1: { x: 2, y: 0 },
       focus2: { x: 4, y: 4 },
       directrix: 5,
-      domain: [0, 4],
     })
     expect(points).toHaveLength(2)
     expect(points[0]).toBeWithin(1e-2, {
