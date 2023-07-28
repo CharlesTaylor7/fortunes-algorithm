@@ -1,6 +1,7 @@
 import PriorityQueue from 'flatqueue'
 import { intersect as intersectParabolas } from '@/utilities/parabola'
-import type { IDiagram, IBeachNode, Site, HalfEdge, BoundingBox, Point, Event } from '@/utilities/types'
+import circumCircle from '@/utilities/circumCircle'
+import type { IDiagram, IBeachNode, Site, HalfEdge, BoundingBox, Point, Event, CircleEvent } from '@/utilities/types'
 
 export { diagram as Diagram }
 function diagram(): Diagram {
@@ -15,6 +16,7 @@ class Diagram implements IDiagram {
   beachline?: IBeachNode
   queue: PriorityQueue<Event> = new PriorityQueue()
   bounds: BoundingBox = { height: 0, width: 0 }
+  circleEvents: Map<string, CircleEvent> = new Map()
 
   // For labeling beach nodes, we need to count the number of beach segments for each site
   beachNodeCounts: Array<number> = []
@@ -27,6 +29,7 @@ class Diagram implements IDiagram {
     this.sweeplineX = 0
     this.beachline = undefined
     this.queue = new PriorityQueue()
+    this.circleEvents = new Map()
     this.beachNodeCounts = []
     this.stepCount = 0
 
@@ -80,6 +83,16 @@ class Diagram implements IDiagram {
       break
     }
 
+    // if the current node was the middle element of circle event triple,
+    // then we delete that event.
+    if (current.next !== current.prev && current.next && current.prev) {
+      const event = this.circleEvents.get(`${current.prev.label}-${current.label}-${current.next.label}`)
+      if (event) {
+        event.deleted = true
+      }
+    }
+
+    // link node into beachline
     // link node after current
     const oldNext = current.next
     current.next = node
@@ -93,16 +106,35 @@ class Diagram implements IDiagram {
       copy.next = oldNext
       oldNext.prev = copy
     }
+
+    this.newCircleEvent(current)
+    this.newCircleEvent(copy)
+  }
+
+  newCircleEvent(node: IBeachNode) {
+    if (node.prev && node.next && node.prev != node.next) {
+      const { center, radius } = circumCircle(node.prev.site.point, node.site.point, node.next.site.point)
+      const x = center.x + radius
+      if (x > this.sweeplineX) {
+        const event: CircleEvent = {
+          type: 'circle',
+          sites: [node.prev.site, node.site, node.next.site],
+          deleted: false,
+        }
+        this.queue.push(event, x)
+        this.circleEvents.set(`${node.prev.label}-${node.label}-${node.next.label}`, event)
+      }
+    }
   }
 
   newBeachNode(site: Site): IBeachNode {
     const count = this.beachNodeCounts[site.index]++
-    return new BeachNode(site.index, `${site.label}1`)
+    return new BeachNode(site, `${site.label}1`)
   }
 
   copyBeachNode(node: IBeachNode) {
     const count = this.beachNodeCounts[node.siteIndex]++
-    return new BeachNode(node.siteIndex, `${node.label[0]}${count}`)
+    return new BeachNode(node.site, `${node.label[0]}${count}`)
   }
 
   nextBreakpoint(node: IBeachNode): number | undefined {
@@ -220,12 +252,14 @@ function* backwards(node: IBeachNode) {
 // TODO: balance these
 class BeachNode implements IBeachNode {
   label: string
-  siteIndex: number
+  site: Site
+  siteIndex: number // TODO: delete this
   next?: IBeachNode
   prev?: IBeachNode
 
-  constructor(siteIndex: number, label: string) {
-    this.siteIndex = siteIndex
+  constructor(site: Site, label: string) {
+    this.site = site
+    this.siteIndex = site.index
     this.label = label
   }
 }

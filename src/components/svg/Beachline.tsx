@@ -50,7 +50,6 @@ function Beachline(props: Props) {
           key={`break-${i}`}
           data-label={b.label}
           stroke="black"
-          key={i}
           x1="0"
           x2={props.diagram.sweeplineX}
           y1={b.y}

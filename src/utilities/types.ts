@@ -36,6 +36,7 @@ export type SiteEvent = {
 export type CircleEvent = {
   type: 'circle'
   sites: [Site, Site, Site]
+  deleted: boolean
 }
 
 export type BoundingBox = { height: number; width: number }
@@ -56,10 +57,10 @@ export interface IDiagram {
   toGraphviz(fileName?: string): Promise<void>
 }
 
-// TODO: balance these
 export interface IBeachNode {
   label: string
-  siteIndex: number
+  site: Site
+  siteIndex: number // TODO: remove this
   next?: IBeachNode
   prev?: IBeachNode
 }
