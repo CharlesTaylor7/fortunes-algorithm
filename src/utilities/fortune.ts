@@ -103,23 +103,29 @@ class Diagram implements IDiagram {
 
   nextBreakpoint(node: IBeachNode): number | undefined {
     if (node.next) {
-      return intersectParabolas({
+      const points = intersectParabolas({
         focus1: this.sites[node.siteIndex].point,
         focus2: this.sites[node.next.siteIndex].point,
         directrix: this.sweeplineX,
-        domain: [0, this.bounds.height],
-      })[1].y
+      })
+
+      // return largest point by y coordinate
+      const y = points[points.length - 1].y
+      return Math.min(y, this.bounds.height)
     }
   }
 
   prevBreakpoint(node: IBeachNode): number | undefined {
     if (node.prev) {
-      return intersectParabolas({
+      const points = intersectParabolas({
         focus1: this.sites[node.prev.siteIndex].point,
         focus2: this.sites[node.siteIndex].point,
         directrix: this.sweeplineX,
-        domain: [0, this.bounds.height],
-      })[0].y
+      })
+
+      // return smallest point by y coordinate
+      const y = points[0].y
+      return Math.max(y, 0)
     }
   }
 

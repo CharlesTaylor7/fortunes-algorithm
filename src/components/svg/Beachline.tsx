@@ -45,29 +45,11 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
   const directrix = diagram.sweeplineX
   while (node) {
     const [curve, _] = parabola({ focus: loc(diagram, node), directrix })
-    let start: number = 0
-    let end: number = diagram.bounds.height
 
-    if (node.prev) {
-      start = intersectParabolas({
-        focus1: loc(diagram, node.prev),
-        focus2: loc(diagram, node),
-        directrix,
-        domain: [0, diagram.bounds.height],
-      })[0].y
-    }
-
-    if (node.next) {
-      end = intersectParabolas({
-        focus1: loc(diagram, node),
-        focus2: loc(diagram, node.next),
-        directrix,
-        domain: [0, diagram.bounds.height],
-      })[0].y
-    }
+    let start: number = diagram.prevBreakpoint(node) || 0
+    let end: number = diagram.nextBreakpoint(node) || diagram.bounds.height
 
     if (start > end) {
-      /* 
       console.error(
         'start exceeds end',
          {
@@ -76,8 +58,8 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
           focus: loc(diagram, node),
         }
       )
-      */
     }
+
     beziers.push({
       label: node.label,
       siteIndex: node.siteIndex,

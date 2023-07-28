@@ -84,12 +84,12 @@ const parabolaCoefficients = ({ focus, directrix }: Parabola) => {
   return [(offset + f_y ** 2) / denominator, (-2 * f_y) / denominator, 1 / denominator]
 }
 
-function tap<T>(x): T {
+function tap<T>(x: T): T {
   console.log(x)
   return x
 }
 
-const solveQuadratic = (a: number, b: number, c: number): [number, number] => {
+const solveQuadratic = (a: number, b: number, c: number): number[] => {
   const discriminant = b ** 2 - 4 * a * c
   if (discriminant < 0) {
     console.error('negative discriminant', { a, b, c, discriminant })
@@ -108,9 +108,16 @@ type IntersectArgs = {
   directrix: number
 }
 
+const TOLERANCE = 1e-10
+
 export function intersect({ focus1, focus2, directrix }: IntersectArgs): Point[] {
-  if (focus1.x > directrix || focus2.x > directrix) {
-    throw new Error('expected directrix to exceed focii')
+  if (Math.abs(focus1.x - directrix) < TOLERANCE) {
+    const [f, _] = parabola({focus: focus2, directrix})
+    return [{ x: f(focus1.y), y: focus1.y }]
+  }
+  if (Math.abs(focus2.x - directrix) < TOLERANCE) {
+    const [f, _] = parabola({focus: focus1, directrix})
+    return [{ x: f(focus2.y), y: focus2.y }]
   }
 
   const [c1, b1, a1] = parabolaCoefficients({ focus: focus1, directrix })

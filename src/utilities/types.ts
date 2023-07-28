@@ -40,6 +40,8 @@ export interface IDiagram {
   restart(): void
   newSite(point: Point, label?: string): Site
   step(): void
+  prevBreakpoint(node: IBeachNode): number | undefined
+  nextBreakpoint(node: IBeachNode): number | undefined
 }
 
 // TODO: balance these
