@@ -28,7 +28,7 @@ export const parabola = ({ focus, directrix }: Parabola): [Curve, Curve] => {
   const { x: f_x, y: f_y } = focus
   const d = directrix
 
-  const x = (y: number) => ((y - f_y) ** 2) / (2 * (f_x - d)) + (f_x + d) / 2
+  const x = (y: number) => (y - f_y) ** 2 / (2 * (f_x - d)) + (f_x + d) / 2
   const x_prime = (y: number) => (y - f_y) / (f_x - d)
   return [x, x_prime]
 }
@@ -103,11 +103,29 @@ type IntersectArgs = {
   domain: [number, number]
 }
 
+export function intersect({ focus1, focus2, directrix, domain }: IntersectArgs): Point[] {
+  if (focus1.x > directrix || focus2.x > directrix) {
+    throw new Error('expected directrix to exceed focii')
+  }
+
+  const [a1, b1, c1] = parabolaCoefficients({ focus: focus1, directrix })
+  const [a2, b2, c2] = parabolaCoefficients({ focus: focus2, directrix })
+  const [y1, y2] = solveQuadratic(a1 - a2, b1 - b2, c1 - c2)
+
+  const [f1] = parabola({ focus: focus1, directrix })
+  const [f2] = parabola({ focus: focus2, directrix })
+
+  return [
+    { x: f1(y1), y: y1 },
+    { x: f1(y2), y: y2 },
+  ]
+}
+
 function average(focus1: Point, focus2: Point): Point {
   return { x: (focus1.x + focus2.x) / 2, y: (focus1.y + focus2.y) / 2 }
 }
 
-export function intersect({ focus1, focus2, directrix, domain }: IntersectArgs): Point[] {
+export function old_intersect({ focus1, focus2, directrix, domain }: IntersectArgs): Point[] {
   if (focus1.x > directrix || focus2.x > directrix) {
     throw new Error('expected directrix to exceed focii')
   }

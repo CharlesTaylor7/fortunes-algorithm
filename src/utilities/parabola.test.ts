@@ -26,7 +26,28 @@ describe('parabola', () => {
   })
 })
 
-describe.skip('intersect', () => {
+describe('parabolaBezier', () => {
+  test('Large y', () => {
+    const focus = {
+      x: 55,
+      y: 328,
+    }
+
+    const { start, end, control } = parabolaBezier({
+      focus,
+      directrix: 0,
+      y_range: [0, 366],
+    })
+
+    expect(start.x).toBeCloseTo(1005.54)
+    expect(start.y).toBeCloseTo(0)
+    expect(end.x).toBeCloseTo(40.63)
+    expect(end.y).toBeCloseTo(366)
+    expect(control.x).toBeLessThan(focus.x)
+  })
+})
+
+describe('intersect', () => {
   test('focuses have the same y coordinate', () => {
     const points = intersect({
       focus1: { x: 0, y: 4 },
@@ -64,26 +85,5 @@ describe.skip('intersect', () => {
       x: 2.745966692414834,
       y: 2.127016653792583,
     })
-  })
-})
-
-describe('parabolaBezier', () => {
-  test('Large y', () => {
-    const focus = {
-      x: 55,
-      y: 328,
-    }
-
-    const { start, end, control } = parabolaBezier({
-      focus,
-      directrix: 0,
-      y_range: [0, 366],
-    })
-
-    expect(start.x).toBeCloseTo(1005.54)
-    expect(start.y).toBeCloseTo(0)
-    expect(end.x).toBeCloseTo(40.63)
-    expect(end.y).toBeCloseTo(366)
-    expect(control.x).toBeLessThan(focus.x)
   })
 })
