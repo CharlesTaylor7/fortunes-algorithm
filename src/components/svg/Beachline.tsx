@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import type { SiteInfoMap } from '@/hooks/useFortune'
 
+import { Site } from '@/components/svg/Site'
 import Bezier from '@/components/svg/Bezier'
 import type { IDiagram, IBeachNode, Point, Bezier as BezierType } from '@/utilities/types'
 import { parabolaBezier, parabola, intersect as intersectParabolas } from '@/utilities/parabola'
@@ -10,7 +11,29 @@ type Props = {
   onHover: (siteIndex: number) => (hover: boolean) => void
   siteInfo: SiteInfoMap
 }
-export default function Beachline(props: Props) {
+
+export default function Debug(props: Props) {
+  function bezierPoints(site) {
+    return parabolaBezier({
+      focus: site.point,
+      y_range: [0, props.diagram.bounds.height],
+      directrix: props.diagram.sweeplineX,
+    })
+  }
+  return (
+    <>
+      {props.diagram.sites.map((site, i) => (
+        <Bezier key={`bezier-${i}`} label={site.label} {...bezierPoints(site)} />
+      ))}
+      {breakpoints(props.diagram).map((b, i) => (
+        //<Site key={i} {...b} />
+        <line data-label={b.label} stroke="black" key={b.i} x1="0" x2={props.diagram.sweeplineX} y1={b.y} y2={b.y} />
+      ))}
+    </>
+  )
+}
+
+function Beachline(props: Props) {
   return (
     <>
       {beachSegments(props.diagram).map((segment, i) => {
@@ -27,6 +50,32 @@ export default function Beachline(props: Props) {
       })}
     </>
   )
+}
+
+type Breakpoint = {
+  label: string
+  y: number
+}
+function breakpoints(diagram: IDiagram): Array<BeachSegment> {
+  let node = diagram.beachline
+  const breakpoints: Array<Breakpoint> = []
+  const directrix = diagram.sweeplineX
+  while (node) {
+    const [curve, _] = parabola({ focus: loc(diagram, node), directrix })
+
+    let start = diagram.prevBreakpoint(node)
+    if (start !== undefined) {
+      breakpoints.push({ label: `${node.label}-${node.next?.label}`, y: start })
+    }
+
+    let end = diagram.nextBreakpoint(node)
+    if (end !== undefined) {
+      breakpoints.push({ label: `${node.prev?.label}-${node.label}`, y: end })
+    }
+
+    node = node.next
+  }
+  return breakpoints
 }
 
 function loc(diagram: IDiagram, node: IBeachNode): Point {
@@ -50,15 +99,13 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
     let end: number = diagram.nextBreakpoint(node) || diagram.bounds.height
 
     if (start > end) {
-      console.error(
-        'start exceeds end',
-         {
-           start, end,
-          next: node.next && loc(diagram, node.next),
-          prev: node.prev && loc(diagram, node.prev),
-          focus: loc(diagram, node),
-        }
-      )
+      console.error('start exceeds end', {
+        start,
+        end,
+        next: node.next && loc(diagram, node.next),
+        prev: node.prev && loc(diagram, node.prev),
+        focus: loc(diagram, node),
+      })
     }
 
     beziers.push({

@@ -99,7 +99,7 @@ const solveQuadratic = (a: number, b: number, c: number): number[] => {
   if (Number.isFinite(roots[0]) && Number.isFinite(roots[1])) {
     return roots
   }
-  return [c/-b]
+  return [c / -b]
 }
 
 type IntersectArgs = {
@@ -112,11 +112,11 @@ const TOLERANCE = 1e-10
 
 export function intersect({ focus1, focus2, directrix }: IntersectArgs): Point[] {
   if (Math.abs(focus1.x - directrix) < TOLERANCE) {
-    const [f, _] = parabola({focus: focus2, directrix})
+    const [f, _] = parabola({ focus: focus2, directrix })
     return [{ x: f(focus1.y), y: focus1.y }]
   }
   if (Math.abs(focus2.x - directrix) < TOLERANCE) {
-    const [f, _] = parabola({focus: focus1, directrix})
+    const [f, _] = parabola({ focus: focus1, directrix })
     return [{ x: f(focus2.y), y: focus2.y }]
   }
 
@@ -127,10 +127,9 @@ export function intersect({ focus1, focus2, directrix }: IntersectArgs): Point[]
   const [f1] = parabola({ focus: focus1, directrix })
   // const [f2] = parabola({ focus: focus2, directrix })
 
-  return roots.map(y => ({x: f1(y), y}))
+  return roots.map((y) => ({ x: f1(y), y }))
 }
 
 function average(focus1: Point, focus2: Point): Point {
   return { x: (focus1.x + focus2.x) / 2, y: (focus1.y + focus2.y) / 2 }
 }
-

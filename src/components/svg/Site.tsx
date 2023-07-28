@@ -18,7 +18,6 @@ export function Site(props: Props) {
   return (
     <g transform={`translate(${props.x}, ${props.y})`}>
       <circle
-        className="site"
         onMouseOver={() => props.onHover(true)}
         onMouseOut={() => props.onHover(false)}
         fill="black"
