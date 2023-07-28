@@ -35,7 +35,7 @@ export type SiteEvent = {
 
 export type CircleEvent = {
   type: 'circle'
-  sites: [Site, Site, Site]
+  arcs: [IBeachNode, IBeachNode, IBeachNode]
   deleted: boolean
 }
 
@@ -61,8 +61,11 @@ export interface IBeachNode {
   label: string
   site: Site
   siteIndex: number // TODO: remove this
+
   next?: IBeachNode
   prev?: IBeachNode
+
+  remove(): IBeachNode
 }
 
 export type Site = {

@@ -55,6 +55,8 @@ class Diagram implements IDiagram {
     }
     if (event.type === 'site') {
       this.insertBeachNode(event.site)
+    } else if (event.type === 'circle' && !event.deleted) {
+      this.processCircleEvent(event)
     }
     this.stepCount++
   }
@@ -83,14 +85,7 @@ class Diagram implements IDiagram {
       break
     }
 
-    // if the current node was the middle element of circle event triple,
-    // then we delete that event.
-    if (current.next !== current.prev && current.next && current.prev) {
-      const event = this.circleEvents.get(`${current.prev.label}-${current.label}-${current.next.label}`)
-      if (event) {
-        event.deleted = true
-      }
-    }
+    this.deleteCircleEvent(current)
 
     // link node into beachline
     // link node after current
@@ -112,17 +107,36 @@ class Diagram implements IDiagram {
   }
 
   newCircleEvent(node: IBeachNode) {
-    if (node.prev && node.next && node.prev != node.next) {
-      const { center, radius } = circumCircle(node.prev.site.point, node.site.point, node.next.site.point)
-      const x = center.x + radius
-      if (x > this.sweeplineX) {
-        const event: CircleEvent = {
-          type: 'circle',
-          sites: [node.prev.site, node.site, node.next.site],
-          deleted: false,
-        }
-        this.queue.push(event, x)
-        this.circleEvents.set(`${node.prev.label}-${node.label}-${node.next.label}`, event)
+    if (!node.prev || !node.next || node.prev === node.next) return
+    // if the current node was the middle element of circle event triple,
+    // then we delete that event.
+    const event = this.circleEvents.get(`${node.prev.label}-${node.label}-${node.next.label}`)
+    if (event) {
+      event.deleted = true
+    }
+
+    const { center, radius } = circumCircle(node.prev.site.point, node.site.point, node.next.site.point)
+    const x = center.x + radius
+    if (x > this.sweeplineX) {
+      const event: CircleEvent = {
+        type: 'circle',
+        arcs: [node.prev, node, node.next],
+        deleted: false,
+      }
+      this.queue.push(event, x)
+      this.circleEvents.set(`${node.prev.label}-${node.label}-${node.next.label}`, event)
+    }
+  }
+
+  deleteCircleEvent(node: IBeachNode) {
+    if (!node.prev || !node.next || node.prev === node.next) return
+    const { center, radius } = circumCircle(node.prev.site.point, node.site.point, node.next.site.point)
+    const x = center.x + radius
+    if (x > this.sweeplineX) {
+      this.queue.push(event, x)
+      const event = this.circleEvents.get(`${node.prev.label}-${node.label}-${node.next.label}`)
+      if (event) {
+        event.deleted = true
       }
     }
   }
@@ -174,6 +188,14 @@ class Diagram implements IDiagram {
       yield current
       current = current.next
     }
+  }
+
+  processCircleEvent(event: CircleEvent) {
+    this.deleteCircleEvent(event.arcs[0])
+    this.deleteCircleEvent(event.arcs[2])
+    event.arcs[1].remove()
+    this.newCircleEvent(event.arcs[0])
+    this.newCircleEvent(event.arcs[2])
   }
 
   toGraphvizContent(): string {
