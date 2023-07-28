@@ -108,7 +108,7 @@ class Diagram implements IDiagram {
         focus2: this.sites[node.next.siteIndex].point,
         directrix: this.sweeplineX,
         domain: [0, this.bounds.height],
-      })[0].y
+      })[1].y
     }
   }
 

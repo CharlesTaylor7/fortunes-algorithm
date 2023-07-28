@@ -2,7 +2,7 @@
 import type { IBeachNode, IDiagram } from './types'
 import { Diagram } from './fortune'
 
-describe.skip('Diagram', () => {
+describe('Diagram', () => {
   test('inserting beach nodes', async () => {
     const diagram = Diagram()
     diagram.newSite({ x: 1, y: 3 }, 'A')
