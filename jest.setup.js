@@ -4,7 +4,7 @@ function normSquared(point1, point2) {
 }
 
 function format(point) {
-  return `(${point.x}, ${point.y})`
+  return `(${point.x.toFixed(2)}, ${point.y.toFixed(2)})`
 }
       
 

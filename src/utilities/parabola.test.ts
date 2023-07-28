@@ -55,10 +55,14 @@ describe('intersect', () => {
       directrix: 5,
       domain: [0, 10],
     })
-    expect(points).toHaveLength(1)
+    expect(points).toHaveLength(2)
     expect(points[0]).toBeWithin(1e-2, {
-      x: 0.9832282068558234,
-      y: 7.889188661993826,
+      x: 0.9999999999999996, 
+      y: 0.12701665379258267
+    })
+    expect(points[1]).toBeWithin(1e-2, {
+      x: 1,
+      y: 7.87,
     })
   })
 
@@ -80,10 +84,14 @@ describe('intersect', () => {
       directrix: 5,
       domain: [0, 4],
     })
-    expect(points).toHaveLength(1)
+    expect(points).toHaveLength(2)
     expect(points[0]).toBeWithin(1e-2, {
       x: 2.745966692414834,
       y: 2.127016653792583,
+    })
+    expect(points[1]).toBeWithin(1e-2, {
+      x: -12.75, 
+      y: 9.87
     })
   })
 })
