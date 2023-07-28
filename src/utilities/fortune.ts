@@ -112,7 +112,7 @@ class Diagram implements IDiagram {
         focus2: this.sites[node.next.siteIndex].point,
         directrix: this.sweeplineX,
       })
-      console.log("nextBreakpoint", points)
+      console.log('nextBreakpoint', points)
 
       // return largest point by y coordinate
       const y = points[points.length - 1].y
@@ -128,7 +128,7 @@ class Diagram implements IDiagram {
         directrix: this.sweeplineX,
       })
 
-      console.log("prevBreakpoint", points)
+      console.log('prevBreakpoint', points)
 
       // return smallest point by y coordinate
       const y = points[0].y
@@ -173,7 +173,7 @@ class Diagram implements IDiagram {
     const labels = Array.from(nodesMap.keys()).join('; ')
     content.push(`{ rank=same; ${labels}}`)
     content.push('}')
-    return content.join("\n")
+    return content.join('\n')
   }
 
   // dump graphiz of the beachline to debug the issues
@@ -182,7 +182,7 @@ class Diagram implements IDiagram {
 
     // https://github.com/jsdom/jsdom/issues/1537#issuecomment-229405327
     // detect jsdom for test cases
-    if (navigator.userAgent.includes("Node.js") || navigator.userAgent.includes("jsdom")) {
+    if (navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom')) {
       const fs = await import('node:fs/promises')
       const file = await fs.open(`graphs/${fileName}.txt`, 'w')
       await file.write(this.toGraphvizContent())
@@ -191,16 +191,16 @@ class Diagram implements IDiagram {
     }
     // otherwise running in browser, hit the dev express server
     else {
-      const response = await fetch("./graphviz", {
-        method: "POST", 
+      const response = await fetch('./graphviz', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           fileName,
           content: this.toGraphvizContent(),
-        }), 
-      });
+        }),
+      })
     }
   }
 }

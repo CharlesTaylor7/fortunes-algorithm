@@ -26,7 +26,17 @@ export type Bezier = {
   control: Point
 }
 
-export type Event = { type: 'site'; site: Site } | { type: 'circle' }
+export type Event = SiteEvent | CircleEvent
+
+export type SiteEvent = {
+  type: 'site'
+  site: Site
+}
+
+export type CircleEvent = {
+  type: 'circle'
+  sites: [Site, Site, Site]
+}
 
 export type BoundingBox = { height: number; width: number }
 

@@ -25,7 +25,6 @@ function Debug(props: Props) {
       {props.diagram.sites.map((site, i) => (
         <Bezier key={`bezier-${i}`} label={site.label} {...bezierPoints(site)} />
       ))}
-      
     </>
   )
 }
@@ -47,7 +46,16 @@ function Beachline(props: Props) {
       })}
       {breakpoints(props.diagram).map((b, i) => (
         //<Site key={i} {...b} />
-        <line key={`break-${i}`} data-label={b.label} stroke="black" key={i} x1="0" x2={props.diagram.sweeplineX} y1={b.y} y2={b.y} />
+        <line
+          key={`break-${i}`}
+          data-label={b.label}
+          stroke="black"
+          key={i}
+          x1="0"
+          x2={props.diagram.sweeplineX}
+          y1={b.y}
+          y2={b.y}
+        />
       ))}
     </>
   )
