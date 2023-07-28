@@ -1,6 +1,7 @@
 - [ ] Debug the beachline code
   - [ ] Show the line bisectors between site of the beachline
-
+- [ ] Use a balancing red-black tree for the beachline
+- [ ] Update Graphviz to show red-black trees
 - [ ] Vet numerical algorithms for numerical stability
 
 ## Done

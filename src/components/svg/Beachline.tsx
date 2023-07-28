@@ -13,7 +13,7 @@ type Props = {
 }
 
 export default function Debug(props: Props) {
-  function bezierPoints(site) {
+  function bezierPoints(site: any) {
     return parabolaBezier({
       focus: site.point,
       y_range: [0, props.diagram.bounds.height],
@@ -27,7 +27,7 @@ export default function Debug(props: Props) {
       ))}
       {breakpoints(props.diagram).map((b, i) => (
         //<Site key={i} {...b} />
-        <line data-label={b.label} stroke="black" key={b.i} x1="0" x2={props.diagram.sweeplineX} y1={b.y} y2={b.y} />
+        <line data-label={b.label} stroke="black" key={i} x1="0" x2={props.diagram.sweeplineX} y1={b.y} y2={b.y} />
       ))}
     </>
   )
@@ -56,7 +56,7 @@ type Breakpoint = {
   label: string
   y: number
 }
-function breakpoints(diagram: IDiagram): Array<BeachSegment> {
+function breakpoints(diagram: IDiagram): Array<Breakpoint> {
   let node = diagram.beachline
   const breakpoints: Array<Breakpoint> = []
   const directrix = diagram.sweeplineX

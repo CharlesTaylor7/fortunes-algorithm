@@ -51,6 +51,7 @@ class Diagram implements IDiagram {
     if (event.type === 'site') {
       this.insertBeachNode(event.site)
     }
+    this.toGraphviz("step") 
   }
 
   insertBeachNode(site: Site) {
@@ -130,12 +131,9 @@ class Diagram implements IDiagram {
     }
   }
 
-  // nodejs only
-  // dump graphiz of the beachline to debug the issues
-  async toGraphviz(filename: string) {
-    const fs = await import('node:fs/promises')
-    const file = await fs.open(`graphs/${filename}.txt`, 'w')
-    await file.write('digraph {\n')
+  toGraphvizContent(): string {
+    const content: Array<string> = []
+    content.push('digraph {')
 
     let nodes: Array<IBeachNode> = Array.from(this.iterateBeachNodes())
     let nodesBackwards = Array.from(backwards(nodes[nodes.length - 1]))
@@ -149,22 +147,29 @@ class Diagram implements IDiagram {
     }
 
     for (let node of nodesMap.values()) {
-      await file.write(`${node.label}\n`)
+      content.push(`${node.label}`)
       if (node.next) {
-        await file.write(`${node.label} -> ${node.next.label} [color=green;label=next]\n`)
+        content.push(`${node.label} -> ${node.next.label} [color=green;label=next]`)
       }
 
       if (node.prev) {
-        await file.write(`${node.label} -> ${node.prev.label} [color=blue;label=prev]\n`)
+        content.push(`${node.label} -> ${node.prev.label} [color=blue;label=prev]`)
       }
     }
 
     const labels = Array.from(nodesMap.keys()).join('; ')
-    await file.write(`{ rank=same; ${labels}}\n`)
-    await file.write('}\n')
-    await file.close()
+    content.push(`{ rank=same; ${labels}}`)
+    content.push('}')
+    return content.join("\n")
+  }
 
-    const child_process = await import('child_process')
+  // nodejs only
+  // dump graphiz of the beachline to debug the issues
+  async toGraphviz(filename: string) {
+    const fs = await import('node:fs/promises')
+    const file = await fs.open(`graphs/${filename}.txt`, 'w')
+    await file.write(this.toGraphvizContent())
+    const child_process = await import('node:child_process')
     child_process.execSync(`dot -Tsvg graphs/${filename}.txt > graphs/${filename}.svg`)
   }
 

@@ -7,6 +7,10 @@ type Props = BezierType & {
   onHover: (hover: boolean) => void
   label: string
 }
+Bezier.defaultProps = {
+  highlight: false,
+  onHover: () => {},
+}
 
 export default function Bezier(props: Props) {
   const { start, control, end } = props
