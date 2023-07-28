@@ -18,6 +18,9 @@ import type { Point, Parabola, Bezier } from '@/utilities/types'
 // 5. Divide to a formula for x
 // x = ((y - f_y)**2 + f_x**2 - d**2) / (2 * (f_x - d))
 //
+// 5'. Distribute terms to simplify
+// x = (y - f_y)**2/(2 * (f_x -d)) + (f_x + d) / 2
+//
 // 6. Take the derivative dx/dy
 // x' = (y - f_y) / (f_x - d)
 //
@@ -25,10 +28,7 @@ export const parabola = ({ focus, directrix }: Parabola): [Curve, Curve] => {
   const { x: f_x, y: f_y } = focus
   const d = directrix
 
-  const offset = f_x ** 2 - d ** 2
-  const denominator = 2 * (f_x - d)
-
-  const x = (y: number) => ((y - f_y) ** 2 + offset) / denominator
+  const x = (y: number) => ((y - f_y) ** 2) / (2 * (f_x - d)) + (f_x + d) / 2
   const x_prime = (y: number) => (y - f_y) / (f_x - d)
   return [x, x_prime]
 }
@@ -126,7 +126,7 @@ export function intersect({ focus1, focus2, directrix, domain }: IntersectArgs):
     let guess = start + Math.random() * (end - start)
 
     let prev = Number.NEGATIVE_INFINITY
-    while (guess - prev > 0.000000001) {
+    while (guess - prev > 1e-10) {
       const newGuess = guess - (f_A(guess) - f_B(guess)) / (f_A_prime(guess) - f_B_prime(guess))
       if (Number.isNaN(newGuess)) {
         // got unlucky?
