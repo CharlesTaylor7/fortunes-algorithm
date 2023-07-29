@@ -73,7 +73,7 @@ class Diagram implements IDiagram {
     }
 
     let current = this.beachline
-    let safety = 100;
+    let safety = 100
     while (safety--) {
       const nextB = this.nextBreakpoint(current)
       if (nextB !== undefined && site.point.y > nextB) {
@@ -86,6 +86,11 @@ class Diagram implements IDiagram {
         continue
       }
       break
+    }
+    if ( safety === 0) {
+      this.toGraphviz().then(() => {
+        throw new Error("probable infinite loop")
+      })
     }
 
     this.deleteCircleEvent(current)
@@ -243,14 +248,11 @@ class Diagram implements IDiagram {
 
   // dump graphiz of the beachline to debug the issues
   async toGraphviz(name?: string) {
-    console.log("env", process.env)
     if (process.env.PROD) return
 
     const fileName = name || `step${this.stepCount}`
 
-    // https://github.com/jsdom/jsdom/issues/1537#issuecomment-229405327
-    // detect jsdom for test cases
-    if (typeof navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom')) {
+    if (process.env.NODE_ENV === 'test') {
       const fs = await import('node:fs/promises')
       const file = await fs.open(`graphs/${fileName}.txt`, 'w')
       await file.write(this.toGraphvizContent())
