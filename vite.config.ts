@@ -6,7 +6,9 @@ import { name } from './package.json'
 // https://vitejs.dev/config/
 export default defineConfig((props) => {
   const env = loadEnv(props.mode, process.cwd(), 'VITE_APP')
-
+  Object.assign(env, {
+    PROD: props.mode === 'production',
+  })
   return {
     plugins: [react()],
     define: {

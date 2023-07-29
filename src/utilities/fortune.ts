@@ -73,7 +73,8 @@ class Diagram implements IDiagram {
     }
 
     let current = this.beachline
-    while (true) {
+    let safety = 100;
+    while (safety--) {
       const nextB = this.nextBreakpoint(current)
       if (nextB !== undefined && site.point.y > nextB) {
         current = current.next!
@@ -242,6 +243,7 @@ class Diagram implements IDiagram {
 
   // dump graphiz of the beachline to debug the issues
   async toGraphviz(name?: string) {
+    console.log("env", process.env)
     if (process.env.PROD) return
 
     const fileName = name || `step${this.stepCount}`
