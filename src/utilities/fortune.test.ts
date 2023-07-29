@@ -5,6 +5,8 @@ import { Diagram } from './fortune'
 describe('Diagram', () => {
   test('inserting beach nodes', async () => {
     const diagram = Diagram()
+    diagram.bounds = { width: 300, height: 300 }
+
     diagram.newSite({ x: 1, y: 3 }, 'A')
     diagram.newSite({ x: 2, y: 4 }, 'B')
     diagram.newSite({ x: 3, y: 2 }, 'C')
@@ -16,8 +18,13 @@ describe('Diagram', () => {
     expect(beachLabels(diagram)).toEqual(['A1', 'B1', 'A2'])
 
     diagram.step()
-    await diagram.toGraphviz()
     expect(beachLabels(diagram)).toEqual(['A1', 'C1', 'A3', 'B1', 'A2'])
+
+    diagram.step()
+    expect(beachLabels(diagram)).toEqual(['A1', 'C1', 'B1', 'A2'])
+
+    diagram.step()
+    expect(beachLabels(diagram)).toEqual(['A1', 'B1', 'A2'])
 
     let nodes = Array.from(diagram.iterateBeachNodes())
     let nodesBackwards = Array.from(backwards(nodes[nodes.length - 1]), (node) => node.siteIndex)

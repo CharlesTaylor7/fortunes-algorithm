@@ -87,9 +87,9 @@ class Diagram implements IDiagram {
       }
       break
     }
-    if ( safety === 0) {
+    if (safety === 0) {
       this.toGraphviz().then(() => {
-        throw new Error("probable infinite loop")
+        throw new Error('probable infinite loop')
       })
     }
 
@@ -116,15 +116,12 @@ class Diagram implements IDiagram {
 
   newCircleEvent(node: IBeachNode) {
     if (!node.prev || !node.next || node.prev === node.next) return
-    // if the current node was the middle element of circle event triple,
-    // then we delete that event.
-    const event = this.circleEvents.get(`${node.prev.label}-${node.label}-${node.next.label}`)
-    if (event) {
-      event.deleted = true
-    }
 
+    const label = `${node.prev.label}-${node.label}-${node.next.label}`
     const { center, radius } = circumCircle(node.prev.site.point, node.site.point, node.next.site.point)
     const x = center.x + radius
+    console.log('circum circle', { label, center, radius, x })
+
     if (x > this.sweeplineX) {
       const event: CircleEvent = {
         type: 'circle',
@@ -132,6 +129,7 @@ class Diagram implements IDiagram {
         deleted: false,
       }
       this.queue.push(event, x)
+      console.log("circle event", x, label)
       this.circleEvents.set(`${node.prev.label}-${node.label}-${node.next.label}`, event)
     }
   }
@@ -217,6 +215,7 @@ class Diagram implements IDiagram {
   format(point: Point): string {
     return `${point.x.toFixed(2)}, ${point.y.toFixed(2)}`
   }
+
   toGraphvizContent(): string {
     const content: Array<string> = []
     content.push('digraph {')
@@ -233,7 +232,7 @@ class Diagram implements IDiagram {
     }
 
     for (let node of nodesMap.values()) {
-      content.push(`${node.label}`)
+      content.push(`${node.label} [label="${node.label} (${this.format(node.site.point)})"]`)
       if (node.next) {
         const label = `next ${this.nextBreakpoint(node).toFixed(2)}`
         content.push(`${node.label} -> ${node.next.label} [color=green;label="${label}"]`)
