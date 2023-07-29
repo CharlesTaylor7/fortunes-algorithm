@@ -206,9 +206,7 @@ class Diagram implements IDiagram {
 
   checkInvariants() {
     if (import.meta.env.PROD) return
-  
-    assert(2 === 2, "2 equals 2")
-    assert(2 === 4, "2 equals 4?")
+    // todo
   }
 
   toGraphvizContent(): string {

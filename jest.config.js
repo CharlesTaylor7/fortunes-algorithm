@@ -7,9 +7,7 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)sx?$': ['@swc/jest'],
   },
-  transformIgnorePatterns: [
-    'node_modules/(!(flatqueue)/)'
-  ],
+  transformIgnorePatterns: ['node_modules/(!(flatqueue)/)'],
   setupFilesAfterEnv: [
     //"@testing-library/react/cleanup-after-each",
     '@testing-library/jest-dom/extend-expect',
