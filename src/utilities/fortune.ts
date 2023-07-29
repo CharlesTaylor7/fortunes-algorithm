@@ -130,14 +130,9 @@ class Diagram implements IDiagram {
 
   deleteCircleEvent(node: IBeachNode) {
     if (!node.prev || !node.next || node.prev === node.next) return
-    const { center, radius } = circumCircle(node.prev.site.point, node.site.point, node.next.site.point)
-    const x = center.x + radius
-    if (x > this.sweeplineX) {
-      this.queue.push(event, x)
-      const event = this.circleEvents.get(`${node.prev.label}-${node.label}-${node.next.label}`)
-      if (event) {
-        event.deleted = true
-      }
+    const event = this.circleEvents.get(`${node.prev.label}-${node.label}-${node.next.label}`)
+    if (event) {
+      event.deleted = true
     }
   }
 
@@ -149,6 +144,18 @@ class Diagram implements IDiagram {
   copyBeachNode(node: IBeachNode) {
     const count = this.beachNodeCounts[node.siteIndex]++
     return new BeachNode(node.site, `${node.label[0]}${count}`)
+  }
+
+  deleteBeachNode(node: IBeachNode) {
+    if (this.beachline === node) {
+      this.beachline = node.next
+    }
+    if (node.prev) {
+      node.prev.next = node.next
+    }
+    if (node.next) {
+      node.next.prev = node.prev
+    }
   }
 
   nextBreakpoint(node: IBeachNode): number | undefined {
@@ -193,7 +200,7 @@ class Diagram implements IDiagram {
   processCircleEvent(event: CircleEvent) {
     this.deleteCircleEvent(event.arcs[0])
     this.deleteCircleEvent(event.arcs[2])
-    event.arcs[1].remove()
+    this.deleteBeachNode(event.arcs[1])
     this.newCircleEvent(event.arcs[0])
     this.newCircleEvent(event.arcs[2])
   }

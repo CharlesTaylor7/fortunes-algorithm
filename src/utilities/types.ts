@@ -64,8 +64,6 @@ export interface IBeachNode {
 
   next?: IBeachNode
   prev?: IBeachNode
-
-  remove(): IBeachNode
 }
 
 export type Site = {
