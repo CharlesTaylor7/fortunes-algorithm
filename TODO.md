@@ -5,6 +5,9 @@
 - [ ] Vet numerical algorithms for numerical stability
 
 ## Done
+- [x] Vite builds define process.env variable, for seamless interop with jest test suite
+- [x] Typings for custom jest matcher 
+- [x] Deployed to github pages
 - [x] Graphviz output for dev site by way of vite-express, in addition to test suite
 - [x] Integration with GraphViz. Can output the beachline graph with graphviz.
 - [x] Visual for beach segments & sites
