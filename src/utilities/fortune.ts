@@ -214,6 +214,9 @@ class Diagram implements IDiagram {
     if (process.env.PROD) return
   }
 
+  format(point: Point): string {
+    return `${point.x.toFixed(2)}, ${point.y.toFixed(2)}`
+  }
   toGraphvizContent(): string {
     const content: Array<string> = []
     content.push('digraph {')
@@ -232,11 +235,13 @@ class Diagram implements IDiagram {
     for (let node of nodesMap.values()) {
       content.push(`${node.label}`)
       if (node.next) {
-        content.push(`${node.label} -> ${node.next.label} [color=green;label=next]`)
+        const label = `next ${this.nextBreakpoint(node).toFixed(2)}`
+        content.push(`${node.label} -> ${node.next.label} [color=green;label="${label}"]`)
       }
 
       if (node.prev) {
-        content.push(`${node.label} -> ${node.prev.label} [color=blue;label=prev]`)
+        const label = `prev ${this.prevBreakpoint(node).toFixed(2)}`
+        content.push(`${node.label} -> ${node.prev.label} [color=blue;label="${label}"]`)
       }
     }
 
