@@ -9,9 +9,9 @@
     "dev": "node src/server.js # vite --port 3000",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
+    "test": "jest",
     "typecheck": "tsc --pretty --noEmit",
-    "format": "prettier --write src/ jest.*"
+    "format": "prettier --write src/ jest.* vite.config.ts"
   },
   "dependencies": {
     "flatqueue": "^2.0.3",

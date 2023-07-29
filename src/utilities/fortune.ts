@@ -205,7 +205,7 @@ class Diagram implements IDiagram {
   }
 
   checkInvariants() {
-    if (import.meta.env.PROD) return
+    if (process.env.PROD) return
   }
 
   toGraphvizContent(): string {
@@ -242,7 +242,7 @@ class Diagram implements IDiagram {
 
   // dump graphiz of the beachline to debug the issues
   async toGraphviz(name?: string) {
-    if (import.meta.env.PROD) return
+    if (process.env.PROD) return
 
     const fileName = name || `step${this.stepCount}`
 

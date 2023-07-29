@@ -5,6 +5,7 @@
   "jsc": {
     "parser": {
       "syntax": "typescript",
+      "importMeta": true,
       "tsx": true
     },
     "transform": {
