@@ -5,16 +5,16 @@ module.exports = {
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
   roots: ['<rootDir>'],
   transform: {
-    '^.+\\.(t|j)sx?$': ['@swc/jest'],
+    '\\.(t|j)sx?$': ['@swc/jest'],
   },
   transformIgnorePatterns: ['node_modules/(!(flatqueue)/)'],
   setupFilesAfterEnv: [
     //"@testing-library/react/cleanup-after-each",
     '@testing-library/jest-dom/extend-expect',
-    './jest.setup.js',
+    './jest.setup.ts',
   ],
 
-  testRegex: 'test\\.[t|j]sx?$',
+  testRegex: '\\.test\\.[t|j]sx?$',
 
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
