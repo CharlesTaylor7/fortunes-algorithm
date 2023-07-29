@@ -3,12 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "license": "MIT",
+  "type": "module",
   "homepage": "https://charlestaylor7.github.io/fortunes-algorithm",
   "scripts": {
     "dev": "node src/server.js # vite --port 3000",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "jest",
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
     "typecheck": "tsc --pretty --noEmit",
     "format": "prettier --write src/ jest.*"
   },

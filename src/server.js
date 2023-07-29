@@ -1,8 +1,8 @@
 // for local development only
-const express = require('express')
-const ViteExpress = require('vite-express')
-const fs = require('node:fs/promises')
-const child_process = require('node:child_process')
+import express from 'express'
+import ViteExpress from 'vite-express'
+import fs from 'node:fs/promises'
+import child_process from 'node:child_process'
 
 const app = express()
 app.use(express.json())

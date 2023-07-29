@@ -1,7 +1,7 @@
-const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('./tsconfig')
+import { pathsToModuleNameMapper } from 'ts-jest'
+import tsconfig from './tsconfig.json' assert { type: 'json' }
 
-module.exports = {
+export default {
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
   roots: ['<rootDir>'],
   transform: {
@@ -20,6 +20,6 @@ module.exports = {
 
   moduleNameMapper: {
     '\\.(css|less|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
-    ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+    ...pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: '<rootDir>/' }),
   },
 }
