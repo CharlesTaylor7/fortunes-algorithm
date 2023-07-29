@@ -56,7 +56,7 @@ describe('intersect', () => {
     })
     expect(points).toHaveLength(2)
     expect(points[0]).toBeWithin(1e-2, {
-      x: 0.9999999999999996,
+      x: 1,
       y: 0.12701665379258267,
     })
     expect(points[1]).toBeWithin(1e-2, {

@@ -1,6 +1,3 @@
-/// <reference types="node_modules/@types/jest/index.d.ts" />
-
-//import type { CustomMatcherResult } from '@types/jest'
 type Point = { x: number; y: number }
 
 function normSquared(point1: Point, point2: Point): number {
