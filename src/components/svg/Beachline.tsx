@@ -103,7 +103,6 @@ function beachSegments(diagram: IDiagram): Array<BeachSegment> {
   while (node) {
     const [curve, _] = parabola({ focus: loc(diagram, node), directrix })
 
-    console.log(node.label)
     let start: number = diagram.prevBreakpoint(node) || 0
     let end: number = diagram.nextBreakpoint(node) || diagram.bounds.height
 

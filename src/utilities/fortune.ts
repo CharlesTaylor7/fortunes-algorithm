@@ -165,7 +165,6 @@ class Diagram implements IDiagram {
         focus2: this.sites[node.next.siteIndex].point,
         directrix: this.sweeplineX,
       })
-      console.log('nextBreakpoint', points)
 
       // return largest point by y coordinate
       const y = points[points.length - 1].y
@@ -180,8 +179,6 @@ class Diagram implements IDiagram {
         focus2: this.sites[node.siteIndex].point,
         directrix: this.sweeplineX,
       })
-
-      console.log('prevBreakpoint', points)
 
       // return smallest point by y coordinate
       const y = points[0].y
