@@ -3,6 +3,7 @@
     "allowJS": false,
     "composite": true,
     "skipLibCheck": true,
+    "types": ["node"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,

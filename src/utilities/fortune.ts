@@ -2,6 +2,7 @@ import PriorityQueue from 'flatqueue'
 import { intersect as intersectParabolas } from '@/utilities/parabola'
 import circumCircle from '@/utilities/circumCircle'
 import type { IDiagram, IBeachNode, Site, HalfEdge, BoundingBox, Point, Event, CircleEvent } from '@/utilities/types'
+import assert from '@/utilities/assert'
 
 export { diagram as Diagram }
 function diagram(): Diagram {
@@ -59,6 +60,7 @@ class Diagram implements IDiagram {
       this.processCircleEvent(event)
     }
     this.stepCount++
+    this.checkInvariants()
   }
 
   insertBeachNode(site: Site) {
@@ -202,6 +204,13 @@ class Diagram implements IDiagram {
     this.newCircleEvent(event.arcs[2])
   }
 
+  checkInvariants() {
+    if (import.meta.env.PROD) return
+  
+    assert(2 === 2, "2 equals 2")
+    assert(2 === 4, "2 equals 4?")
+  }
+
   toGraphvizContent(): string {
     const content: Array<string> = []
     content.push('digraph {')
@@ -240,7 +249,7 @@ class Diagram implements IDiagram {
 
     // https://github.com/jsdom/jsdom/issues/1537#issuecomment-229405327
     // detect jsdom for test cases
-    if (navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom')) {
+    if (typeof navigator.userAgent.includes('Node.js') || navigator.userAgent.includes('jsdom')) {
       const fs = await import('node:fs/promises')
       const file = await fs.open(`graphs/${fileName}.txt`, 'w')
       await file.write(this.toGraphvizContent())
