@@ -33,6 +33,9 @@ describe('Diagram', () => {
   })
 
   test('inserting to the beachline', async () => {
+    const diagram = Diagram()
+    diagram.bounds = { width: 300, height: 300 }
+
     diagram.newSite({ x: 1, y: 3 }, 'A')
     diagram.newSite({ x: 2, y: 4 }, 'B')
     diagram.newSite({ x: 3, y: 2 }, 'C')
