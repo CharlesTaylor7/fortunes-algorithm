@@ -3,7 +3,7 @@ import type { IBeachNode, IDiagram } from './types'
 import { Diagram } from './fortune'
 
 describe('Diagram', () => {
-  test('inserting beach nodes', async () => {
+  test('#step', async () => {
     const diagram = Diagram()
     diagram.bounds = { width: 300, height: 300 }
 
@@ -30,6 +30,16 @@ describe('Diagram', () => {
     expect(beachLabels(diagram)).toEqual(['A1', 'B1', 'A2'])
 
     expect(() => diagram.step()).toThrow('event queue empty')
+  })
+
+  test('inserting to the beachline', async () => {
+    diagram.newSite({ x: 1, y: 3 }, 'A')
+    diagram.newSite({ x: 2, y: 4 }, 'B')
+    diagram.newSite({ x: 3, y: 2 }, 'C')
+
+    diagram.step()
+    diagram.step()
+    diagram.step()
 
     let nodes = Array.from(diagram.iterateBeachNodes())
     let nodesBackwards = Array.from(backwards(nodes[nodes.length - 1]), (node) => node.siteIndex)

@@ -76,9 +76,9 @@ export type Site = {
 // DCEL
 // https://en.wikipedia.org/wiki/Doubly_connected_edge_list
 export type HalfEdge = {
-  origin: Point
-  twin: HalfEdge
   site: Site
-  prev: HalfEdge
-  next: HalfEdge
+  twin: HalfEdge
+  origin?: Point
+  prev?: HalfEdge
+  next?: HalfEdge
 }
