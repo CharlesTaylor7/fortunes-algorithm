@@ -26,6 +26,11 @@ describe('Diagram', () => {
     diagram.step()
     expect(beachLabels(diagram)).toEqual(['A1', 'B1', 'A2'])
 
+    diagram.step()
+    expect(beachLabels(diagram)).toEqual(['A1', 'B1', 'A2'])
+
+    expect(() => diagram.step()).toThrow('event queue empty')
+
     let nodes = Array.from(diagram.iterateBeachNodes())
     let nodesBackwards = Array.from(backwards(nodes[nodes.length - 1]), (node) => node.siteIndex)
     let nodeIndices = nodes.map((n) => n.siteIndex)

@@ -50,7 +50,7 @@ class Diagram implements IDiagram {
 
   step() {
     const event = this.queue.pop()
-    if (event === undefined) return
+    if (event === undefined) throw new Error('event queue empty')
     if (this.beachNodeCounts.length === 0) {
       this.beachNodeCounts = Array.from(this.sites, () => 0)
     }
@@ -115,7 +115,7 @@ class Diagram implements IDiagram {
   }
 
   newCircleEvent(node: IBeachNode) {
-    if (!node.prev || !node.next || node.prev === node.next) return
+    if (!node.prev || !node.next || node.prev.site === node.next.site) return
 
     const label = `${node.prev.label}-${node.label}-${node.next.label}`
     const { center, radius } = circumCircle(node.prev.site.point, node.site.point, node.next.site.point)
@@ -129,7 +129,7 @@ class Diagram implements IDiagram {
         deleted: false,
       }
       this.queue.push(event, x)
-      console.log("circle event", x, label)
+      console.log('circle event', x, label)
       this.circleEvents.set(`${node.prev.label}-${node.label}-${node.next.label}`, event)
     }
   }
