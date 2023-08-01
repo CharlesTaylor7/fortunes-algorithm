@@ -78,11 +78,12 @@ export default function useFortune() {
         setVertexPlacement(false)
         if (diagram.queue.length === 0) {
           diagram.sweeplineX = diagram.bounds.width
+          rerender()
         } else {
           diagram.step()
+          rerender()
           await diagram.toGraphviz()
         }
-        rerender()
       }
       // reset
       if (e.key === 'r') {
