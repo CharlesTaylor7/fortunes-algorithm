@@ -233,13 +233,15 @@ class Diagram implements IDiagram {
 
     for (let node of nodesMap.values()) {
       content.push(`${node.label} [label="${node.label} (${this.format(node.site.point)})"]`)
-      if (node.next) {
-        const label = `next ${this.nextBreakpoint(node).toFixed(2)}`
+      const next = this.nextBreakpoint(node)
+      if (next && node.next) {
+        const label = `next ${next.toFixed(2)}`
         content.push(`${node.label} -> ${node.next.label} [color=green;label="${label}"]`)
       }
 
-      if (node.prev) {
-        const label = `prev ${this.prevBreakpoint(node).toFixed(2)}`
+      const prev = this.prevBreakpoint(node)
+      if (prev && node.prev) {
+        const label = `prev ${prev.toFixed(2)}`
         content.push(`${node.label} -> ${node.prev.label} [color=blue;label="${label}"]`)
       }
     }
